@@ -86,7 +86,7 @@ var timeInterval = 40;
 var obstacleArray = [];
 
 function gameloop() {
-  if(false||!isInitialized){//if(gameState != GAME_IN_PROGRESS) {
+  if(!isInitialized){//if(gameState != GAME_IN_PROGRESS) {
     clearInterval(loopIntervalID);
     if(gameState == GAME_OVER_WON) {
       io.sockets.emit('GameEnded', true);
