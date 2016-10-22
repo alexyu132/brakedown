@@ -44,47 +44,39 @@
 	}
 
 	function animate(ctx,centerX,centerY,startTime) {
-		//window.alert("sometext");
 	        // update
 	        var time = (new Date()).getTime() - startTime;
-	
-		//ctx.save();
-		//ctx.beginPath();		
-		//ctx.arc(centerX, centerY, 50, 0, 2 * Math.PI,true);
-		//ctx.clip();
-		//ctx.clearRect(0, 0, canvas.width, canvas.height);
-		//ctx.restore();
-		//var cutCircle = function(context, x, y, radius){
-    		//context.globalCompositeOperation = 'destination-out'
-    		//context.arc(x, y, radius, 0, Math.PI*2, true);
-    		//context.fill();
-		//}
 
-		//cutCircle(ctx,centerX,centerY);
-		//alert("hi");
 		drawRoad();
 		drawCar();
-		var randX = -5+Math.random()*15;
+		var randX = -3+Math.random()*7;
+		if (centerY>canvas.height){
+			centerX = Math.random()*(canvas.width-100)+50;
+			centerY = 0;
+		}
 	        drawObstacle(ctx,centerX+randX,centerY+5);
-		//window.alert("sometext");
 	        // request new frame
 	        requestAnimFrame(function() {
 	          animate(ctx,centerX+randX,centerY+5,startTime);
 	        });
       	}
 	function drawObstacle(ctx,centerX,centerY){
+
 		ctx.beginPath();
 		ctx.arc(centerX, centerY, 50, 0, 2 * Math.PI,true);
 		ctx.stroke();
+		
 	}
 	
 	var ctx = canvas.getContext("2d");
 	drawRoad();
 	drawCar();
-	drawObstacle(ctx,70,150);
+	//alert("HI");
+	var randStartX = Math.random()*(canvas.width-100)+50;
+	drawObstacle(ctx,randStartX,40);
 	setTimeout(function() {
         	var startTime = (new Date()).getTime();
-        	animate(ctx,70,150,startTime);
+        	animate(ctx,randStartX,40,startTime);
       	}, 1000);
      </script>
   </body>
