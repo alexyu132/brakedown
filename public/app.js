@@ -25,8 +25,15 @@
         bindEvents: function() {
             IO.socket.on('connected', IO.onConnected);
             IO.socket.on('IHaveReceivedYourCoordinates', IO.serverReceivedCoord );
-            IO.socket.on('GameEnded', IO.gameEnded)
+            IO.socket.on('GameEnded', IO.gameEnded);
+            IO.socket.on('SendDataToClient', IO.updateDataToClient);
 
+        },
+
+        updateDataToClient: function(xPos, yPos, velocity) {
+            console.log('PositionX: ' + xPos);
+            console.log('PositionY: ' + yPos);
+            console.log('Velocity: ' + velocity);
         },
 
         serverReceivedCoord: function() {
@@ -103,12 +110,8 @@
 
 
 
-IO.socket.on('SendDataToClient', updateDataToClient);
-function updateDataToClient(xPos, yPos, velocity) {
-    console.log('PositionX: ' + xPos);
-    console.log('PositionY: ' + yPos);
-    console.log('Velocity: ' + velocity);
-}
+
+
 
 
 
