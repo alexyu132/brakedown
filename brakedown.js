@@ -12,7 +12,7 @@ exports.initGame = function(sio, socket){
     // Host Events
     gameSocket.on('IAmReadyToPlay', hostReady);
     gameSocket.on('CoordinateData', receivedCoordinates);
-
+    //gameSocket.on('CoordinateData', )
 }
 
 function hostReady() {
@@ -42,6 +42,7 @@ var forwardSpeed = 1;
 var numPlayers = 0;
 
 var gameState = 1;
+var deltaTime = 100; //milliseconds
 
 
 function update(deltaTime){
@@ -73,7 +74,6 @@ function checkCollisions(){
   }
 }
 
-function updateVelocity(newVelocity){ //adds a player's wheel setting to overall
-  velocity += newVelocity / numPlayers;
-
+function getRotationValue(){
+  return Math.atan(forwardSpeed/velocity);
 }
