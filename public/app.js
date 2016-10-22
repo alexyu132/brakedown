@@ -122,9 +122,11 @@ var IO = {
 
     car.restore();
 
-    car.fillStyle = "#0000ff";
+    car.fillStyle = "#000000";
     car.font = "25px Verdana";
     car.fillText(numPlayers + " player(s) online!", window.innerWidth - 250, 30);
+    car.fillStyle = "#66CD00";
+    car.fillText(numPlayers + " player(s) online!", window.innerWidth - 252, 28);
 
     console.log("Player yPos: " + yPos);
 
