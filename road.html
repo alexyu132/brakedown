@@ -6,11 +6,18 @@
       your browser does not support the html5 canvas tag
     </canvas>
     <script>	 
+	window.requestAnimFrame = (function(callback) {
+        	return window.requestAnimationFrame || window.webkitRequestAnimationFrame || 		window.mozRequestAnimationFrame || window.oRequestAnimationFrame || window.msRequestAnimationFrame ||
+        	function(callback) {
+       		   window.setTimeout(callback, 1000 / 60);
+       		};
+      	})();
 	var canvas  = document.getElementById("myCanvas");
 
 	var grass = canvas.getContext("2d");
       	grass.fillStyle = "#66cc00";
-      	grass.fillRect(0,0,400,600);
+      	grass.fillRect(0,0,canvas.width,canvas.height);
+
 	var road = canvas.getContext("2d");
 	road.fillStyle = "#F8A757";
       	road.beginPath();
@@ -33,6 +40,41 @@
 	car.closePath();
 	car.fill();
 	car.stroke();
+	
+	function animate(ctx,centerX,centerY,startTime) {
+		//window.alert("sometext");
+	        // update
+	        var time = (new Date()).getTime() - startTime;
+	
+	       // var linearSpeed = 100;
+	        // pixels / second
+	        //var newX = linearSpeed * time / 1000;
+	
+	        //if(newX < canvas.width - myRectangle.width - myRectangle.borderWidth / 2) {
+	          //myRectangle.x = newX;
+	        //}
+	
+	        // clear
+	        //context.clearRect(0, 0, canvas.width, canvas.height);
+		var randX = -5+Math.random()*15;
+	        drawObstacle(ctx,centerX+randX,centerY+5);
+		//window.alert("sometext");
+	        // request new frame
+	        requestAnimFrame(function() {
+	          animate(ctx,centerX+randX,centerY+5,startTime);
+	        });
+      	}
+	function drawObstacle(ctx,centerX,centerY){
+		ctx.beginPath();
+		ctx.arc(centerX, centerY, 50, 0, 2 * Math.PI);
+		ctx.stroke();
+	}
+	var ctx = canvas.getContext("2d");
+	drawObstacle(ctx,70,150);
+	setTimeout(function() {
+        	var startTime = (new Date()).getTime();
+        	animate(ctx,70,150,startTime);
+      	}, 1000);
      </script>
   </body>
 </htlsml>
