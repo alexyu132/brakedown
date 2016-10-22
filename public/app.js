@@ -48,7 +48,7 @@ var IO = {
     ctx.fillStyle = "#66CD00";
     ctx.font = "Verdana 48px";
     var messageWidth = ctx.measureText(receivedMessage).width;
-    ctx.fillText("HWHAHWEHFUEHWAFIEWA", (window.innerWidth - messageWidth) / 2, 100);
+    ctx.fillText(receivedMessage, (window.innerWidth - messageWidth) / 2, 100);
 
   },
 
