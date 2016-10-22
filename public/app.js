@@ -11,6 +11,9 @@ var turnAccel = 0;
 var numPlayers = 0;
 var displayingMessage = false;
 var displayedMessage = "";
+var messageDisplayTime = 1000;
+var timeoutFunction;
+
 
 var IO = {
 
@@ -43,10 +46,11 @@ var IO = {
   showMessage: function(receivedMessage, displayTime) {
     displayingMessage = true;
     displayedMessage = receivedMessage;
-
-    setTimeout(function() {
+    messageDisplayTime = displayTime;
+    clearTimeout(timeoutFunction);
+    timeoutFunction = setTimeout(function() {
       displayingMessage = false;
-    }, displayTime+2000);
+    }, displayTime);
   },
 
   updateNumPlayers: function(numPlayersReceived) {
@@ -144,6 +148,10 @@ var IO = {
       car.font = "Arial 66px";
       var messageWidth = car.measureText(displayedMessage).width;
       car.fillText(displayedMessage, (window.innerWidth - messageWidth) / 2, 100);
+      // clearTimeout(timeoutFunction);
+      // setTimeout(function() {
+      //   displayingMessage = false;
+      // }, messageDisplayTime);
     }
     //console.log("Player yPos: " + yPos);
 
