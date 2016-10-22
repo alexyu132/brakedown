@@ -1,6 +1,7 @@
 var io;
 var gameSocket;
 var loopIntervalID;
+var isInitialized = false;
 /**
  * This function is called by index.js to initialize a new game instance.
  *
@@ -10,15 +11,17 @@ var loopIntervalID;
 exports.initGame = function(sio, socket){
     io = sio;
     gameSocket = socket;
-    gameSocket.emit('connected', { message: "You are connected!" });
+    gameSocket.emit('connected', BOUND, TRACK_LENGTH);
 
     // Host Events
     //gameSocket.on('IAmReadyToPlay', hostReady);
     gameSocket.on('CoordinateData', updateDataToServer);
 
-    generateObstacleArray(OBSTACLE_SPACING);
-
-    loopIntervalID = setInterval(gameloop, timeInterval);
+    if(!isInitialized){
+      generateObstacleArray(OBSTACLE_SPACING);
+      loopIntervalID = setInterval(gameloop, timeInterval);
+      isInitialized = true;
+    }
 }
 
 // function hostReady() {
@@ -48,8 +51,8 @@ var Obstacle = function(leftBound,size, yLocation) {
 }
 
 Obstacle.prototype.checkCollision = function() {
-  if(xPos > leftBound - CAR_WIDTH && xPos < rightBound + CAR_WIDTH) {
-    if(yPos > yLocation - CAR_HEIGHT && yPos < yLocation + 50 + CAR_HEIGHT){  //50 is obstacle height - can change later
+  if(xPos > this.leftBound - CAR_WIDTH && xPos < this.rightBound + CAR_WIDTH) {
+    if(yPos > this.yLocation - CAR_HEIGHT && yPos < this.yLocation + 50 + CAR_HEIGHT){  //50 is obstacle height - can change later
       return true;
     }
   }
@@ -61,10 +64,13 @@ var xPos = 0.0, yPos = 0.0, velocity = 0.0; // velocity = left/right speed
 var velocityMultiplier = 0.05; //TODO: calibrate this by testing
 
 var forwardSpeed = 1;
-var numPlayers = 1;
+var numPlayers = 0;
+
+export {numPlayers};
+
 var gameState = 1;
 
-var timeInterval = 100;
+var timeInterval = 20;
 
 var obstacleArray = [];
 
@@ -72,21 +78,25 @@ function gameloop() {
   if(gameState != GAME_IN_PROGRESS) {
     clearInterval(loopIntervalID);
   } else {
+
   update(timeInterval);
+
   if(gameState == GAME_OVER_WON) {
-    gameSocket.emit('GameEnded', true);
+    gameSocket.broadcast.emit('GameEnded', true);
   } else if(gameState == GAME_OVER_LOST) {
-    gameSocket.emit('GameEnded', false);
+    gameSocket.broadcast.emit('GameEnded', false);
   }
 
-  gameSocket.emit('SendDataToClient', xPos, yPos, getRotationValue(), obstacleArray);
+  gameSocket.broadcast.emit('SendDataToClient', xPos, yPos, getRotationValue(), obstacleArray);
+
+  console.log(numPlayers);
   }
 }
 
 
 function updateDataToServer(mouseX, windowWidth) {
-  console.log('Received X coordinate ' + mouseX + " from client!");
-  console.log('Current Velocity:' + velocity);
+//  console.log('Received X coordinate ' + mouseX + " from client!");
+//  console.log('Current Velocity:' + velocity);
   var playerVelocityInput = (mouseX - windowWidth / 2.0) / windowWidth;
   playerVelocityInput = Math.max(-1, Math.min(playerVelocityInput, 1));
   playerVelocityInput *= velocityMultiplier;

@@ -8,6 +8,10 @@
      * @type {{init: Function, bindEvents: Function, onConnected: Function, onNewGameCreated: Function, playerJoinedRoom: Function, beginNewGame: Function, onNewWordData: Function, hostCheckAnswer: Function, gameOver: Function, error: Function}}
      */
     var IO = {
+
+        bounds: 0,
+
+        trackLength: 0,
         /**
          * This is called when the page is displayed. It connects the Socket.IO client
          * to the Socket.IO server
@@ -33,6 +37,7 @@
             console.log('PositionX: ' + xPos);
             console.log('PositionY: ' + yPos);
             console.log('Velocity: ' + velocity);
+            console.log(obstacleArray);
         },
 
         serverReceivedCoord: function() {
@@ -51,10 +56,11 @@
         /**
          * The client is successfully connected!
          */
-        onConnected: function() {
+        onConnected: function(bounds, trackLength) {
             // Cache a copy of the client's socket.IO session ID on the App
-            console.log('Connected to server!');
-
+            IO.bounds = bounds;
+            IO.trackLength = trackLength;
+            console.log('bounds:' + bounds + " track length:" + trackLength);
             //IO.socket.emit('IAmReadyToPlay');
             var mouseX = 0;
             document.onmousemove = handleMouseMove;
