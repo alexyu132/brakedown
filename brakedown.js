@@ -1,3 +1,6 @@
+var io;
+var gameSocket;
+
 /**
  * This function is called by index.js to initialize a new game instance.
  *
@@ -12,6 +15,8 @@ exports.initGame = function(sio, socket){
     // Host Events
     //gameSocket.on('IAmReadyToPlay', hostReady);
     gameSocket.on('CoordinateData', updateDataToServer);
+
+    setInterval(gameloop, timeInterval);
 }
 
 // function hostReady() {
@@ -32,23 +37,30 @@ const GAME_OVER_LOST = 3;
 
 var xPos = 0.0, yPos = 0.0, velocity = 0.0; // velocity = left/right speed
 
-var velocityMultiplier = 0.1;
+var velocityMultiplier = 0.001;
 
 var forwardSpeed = 1;
-var numPlayers = 0;
+var numPlayers = 1;
 var gameState = 1;
+
+var timeInterval = 100; //temporary
+
+function gameloop() {
+  update(timeInterval);
+  gameSocket.emit('SendDataToClient', xPos, yPos, velocity);
+}
 
 
 function updateDataToServer(mouseX, windowWidth) {
-    console.log('Received X coordinate ' + mouseX + " from client!");
-    var playerVelocityInput = (mouseX - windowWidth / 2) * velocityMultiplier;
-    updateVelocity(playerVelocityInput);
-    //gameSocket.emit('IHaveReceivedYourCoordinates');
+  //console.log('Received X coordinate ' + mouseX + " from client!");
+  var playerVelocityInput = (mouseX - windowWidth / 2) * velocityMultiplier;
+  updateVelocity(playerVelocityInput);
+  //gameSocket.emit('IHaveReceivedYourCoordinates');
 };
 
 function update(deltaTime){
   updatePosition(deltaTime);
-  updateGameStatus(checkCollisions());
+  //updateGameStatus(checkCollisions());
 }
 
 function updatePosition(deltaTime){
@@ -62,7 +74,7 @@ function updateVelocity(newVelocity){ //Adds a player's wheel setting to a movin
 }
 
 function updateGameStatus(collisionOccurred){
-  if(yPos > track_length){
+  if(yPos > TRACK_LENGTH){
     gameState = GAME_OVER_WON;
   } else if(collisionOccurred){
     gameState = GAME_OVER_LOST;
@@ -78,5 +90,3 @@ function checkCollisions(){
 function getRotationValue(){
   return Math.atan(forwardSpeed/velocity);
 }
-
-

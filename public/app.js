@@ -23,10 +23,20 @@ jQuery(function($) {
         bindEvents: function() {
             IO.socket.on('connected', IO.onConnected);
             IO.socket.on('IHaveReceivedYourCoordinates', IO.serverReceivedCoord );
+            IO.socket.on('SendDataToClient', IO.clientReceivedUpdatedData);
         },
+
         serverReceivedCoord: function() {
             console.log('The server received the sent coordinates!');
         },
+
+        clientReceivedUpdatedData: function(xPos, yPos, velocity) {
+            console.log('PositionX: ' + xPos);
+            console.log('PositionY: ' + yPos);
+            console.log('Velocity: ' + velocity);
+        },
+
+
         /**
          * The client is successfully connected!
          */
