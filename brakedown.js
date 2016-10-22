@@ -21,6 +21,7 @@ function hostReady() {
 
 function receivedCoordinates(mouseX) {
     console.log('Received X coordinate '+mouseX+" from client!");
+    gameSocket.emit('IHaveReceivedYourCoordinates');
 };
 
 // Game Logic
