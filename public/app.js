@@ -47,25 +47,41 @@ var IO = {
     canvas.height = window.innerHeight;
     //draw car
     var car = canvas.getContext("2d");
-
-
     car.save();
     var road = car;
+    var checker = car;
+    var line = car;
     //road.save();
+
     road.translate(-xPos + canvas.width / 2, -yPos + canvas.height * .75);
+
     road.fillStyle = "#222222";
     road.fillRect(-IO.bounds, -IO.trackLength, IO.bounds * 2, IO.trackLength *
       2);
 
-    for (var i = 0; i < IO.trackLength / 200; i++) {
-      //console.log(i + "leftBound: " + obstacleArray[i].leftBound);
-      //console.log(i + "DOGGGrightBound: " + obstacleArray[i].rightBound);
-      //console.log(i + "yLocation: " + obstacleArray[i].yLocation);
-      var line = car;
+    for (var i = 0; i < IO.trackLength / 80; i++) {
       line.fillStyle = "#FFFFFF";
       line.fillRect(-10, canvas.height - i * 200, 20, 80);
     }
 
+    var checkSize = IO.bounds / 10;
+    var checkLen = checkSize * 4;
+    checker.fillStyle = "#FF0000";
+    checker.fillRect(-IO.bounds, -IO.trackLength - checkLen, IO.bounds * 2,
+      checkLen);
+    checker.fillStyle = "#FFFFFF";
+    for (var row = 0; row < 10; row++) {
+      for (var col = 0; col < 4; col++) {
+        var whiteRow = 0;
+        if (col == 0 || col == 2) {
+          whiteRow = row * 2;
+        } else {
+          whiteRow = row * 2 + 1;
+        }
+        checker.fillRect(-IO.bounds + whiteRow * checkSize, -IO.trackLength -
+          checkLen + col * checkSize, checkSize, checkSize);
+      }
+    }
 
     car.fillStyle = "#FF0000";
     //car.fillRect(obstacleArray[0].leftBound, obstacleArray[0].yLocation, obstacleArray[0].rightBound - obstacleArray[0].leftBound, 50);
