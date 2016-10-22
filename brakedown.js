@@ -16,6 +16,8 @@ exports.initGame = function(sio, socket){
     //gameSocket.on('IAmReadyToPlay', hostReady);
     gameSocket.on('CoordinateData', updateDataToServer);
 
+    generateObstacleArray(OBSTACLE_SPACING);
+
     loopIntervalID = setInterval(gameloop, timeInterval);
 }
 
@@ -31,6 +33,7 @@ const BOUND = 500; //distance from center that counts as out of bounds
 const TRACK_LENGTH = 10000;
 const CAR_WIDTH = 50;
 const CAR_HEIGHT = 75;
+const OBSTACLE_SPACING = 1000;
 
 //game states
 const GAME_IN_PROGRESS = 1;
@@ -38,9 +41,9 @@ const GAME_OVER_WON = 2;
 const GAME_OVER_LOST = 3;
 
 //obstacle class def
-var Obstacle = function(leftBound,rightBound, yLocation) {
+var Obstacle = function(leftBound,size, yLocation) {
   this.leftBound = leftBound;
-  this.rightBound = rightBound;
+  this.rightBound = leftBound + size;
   this.yLocation = yLocation;
 }
 
@@ -63,21 +66,21 @@ var gameState = 1;
 
 var timeInterval = 100;
 
-
+var obstacleArray = [];
 
 function gameloop() {
-  if(gameState == GAME_IN_PROGRESS) {
-    update(timeInterval);
-  }
-
+  if(gameState != GAME_IN_PROGRESS) {
+    clearInterval(loopIntervalID);
+  } else {
+  update(timeInterval);
   if(gameState == GAME_OVER_WON) {
     gameSocket.emit('GameEnded', true);
   } else if(gameState == GAME_OVER_LOST) {
     gameSocket.emit('GameEnded', false);
   }
 
-  gameSocket.emit('SendDataToClient', xPos, yPos, getRotationValue());
-
+  gameSocket.emit('SendDataToClient', xPos, yPos, getRotationValue(), obstacleArray);
+  }
 }
 
 
@@ -127,4 +130,10 @@ function getRotationValue(){
     return Math.PI/2;
   }
   return Math.atan(forwardSpeed/velocity);
+}
+
+function generateObstacleArray(spacing) {
+  for(i = 0; i < TRACK_LENGTH; i += spacing){
+    obstacleArray.push(new Obstacle(2 * (Math.random() - 0.5) * BOUND, Math.random() * BOUND, i));
+  }
 }
