@@ -107,7 +107,7 @@ jQuery(function($) {
 
 }($));
 window.addEventListener("load", canvasApp, false);
-function canvasApp(){	
+function canvasApp(){
 	window.requestAnimFrame = (function(callback) {
         	return window.requestAnimationFrame || window.webkitRequestAnimationFrame || 		window.mozRequestAnimationFrame || window.oRequestAnimationFrame || window.msRequestAnimationFrame ||
         	function(callback) {
@@ -170,6 +170,7 @@ function canvasApp(){
 		//ctx.arc(centerX, centerY, 50, 0, 2 * Math.PI,true);
 		ctx.stroke();
 	}
+
 	var ctx = canvas.getContext("2d");
 	drawRoad();
 	drawCar();
