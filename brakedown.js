@@ -74,3 +74,9 @@ function checkCollisions(){
     return true;
   }
 }
+
+function getRotationValue(){
+  return Math.atan(forwardSpeed/velocity);
+}
+
+
