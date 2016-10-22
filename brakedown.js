@@ -7,16 +7,18 @@ var loopIntervalID;
  * @param sio The Socket.IO library
  * @param socket The socket object for the connected client.
  */
-exports.initGame = function(sio, socket){
-    io = sio;
-    gameSocket = socket;
-    gameSocket.emit('connected', { message: "You are connected!" });
+exports.initGame = function(sio, socket) {
+  io = sio;
+  gameSocket = socket;
+  gameSocket.emit('connected', {
+    message: "You are connected!"
+  });
 
-    // Host Events
-    //gameSocket.on('IAmReadyToPlay', hostReady);
-    gameSocket.on('CoordinateData', updateDataToServer);
+  // Host Events
+  //gameSocket.on('IAmReadyToPlay', hostReady);
+  gameSocket.on('CoordinateData', updateDataToServer);
 
-    loopIntervalID = setInterval(gameloop, timeInterval);
+  loopIntervalID = setInterval(gameloop, timeInterval);
 }
 
 // function hostReady() {
@@ -35,7 +37,9 @@ const GAME_IN_PROGRESS = 1;
 const GAME_OVER_WON = 2;
 const GAME_OVER_LOST = 3;
 
-var xPos = 0.0, yPos = 0.0, velocity = 0.0; // velocity = left/right speed
+var xPos = 0.0,
+  yPos = 0.0,
+  velocity = 0.0; // velocity = left/right speed
 
 var velocityMultiplier = 0.01; //TODO: calibrate this by testing
 
@@ -46,19 +50,21 @@ var gameState = 1;
 var timeInterval = 100;
 
 function gameloop() {
-  if(gameState != GAME_IN_PROGRESS) {
+  if (gameState != GAME_IN_PROGRESS) {
     clearInterval(loopIntervalID);
   }
 
   update(timeInterval);
-  if(gameState == GAME_OVER_WON) {
+  if (gameState == GAME_OVER_WON) {
     gameSocket.emit('GameEnded', true);
-  } else if(gameState == GAME_OVER_LOST) {
+  } else if (gameState == GAME_OVER_LOST) {
     gameSocket.emit('GameEnded', false);
   }
 
   gameSocket.emit('SendDataToClient', xPos, yPos, getRotationValue());
- 
+  IO.animate(ctx, xCoor, yCoor);
+  //}, 100);
+  setTimeout('', 100);
 }
 
 
@@ -72,37 +78,37 @@ function updateDataToServer(mouseX, windowWidth) {
   //gameSocket.emit('IHaveReceivedYourCoordinates');
 };
 
-function update(deltaTime){
+function update(deltaTime) {
   updatePosition(deltaTime);
   updateGameStatus(checkCollisions());
 }
 
-function updatePosition(deltaTime){
+function updatePosition(deltaTime) {
   xPos += velocity * deltaTime;
   yPos += deltaTime * forwardSpeed;
 }
 
-function updateVelocity(newVelocity){ //Adds a player's wheel setting to a moving average, asynchronous
+function updateVelocity(newVelocity) { //Adds a player's wheel setting to a moving average, asynchronous
 
-  velocity -= velocity / numPlayers;  //Call this once per update interval for each user
+  velocity -= velocity / numPlayers; //Call this once per update interval for each user
   velocity += newVelocity / numPlayers;
 
 }
 
-function updateGameStatus(collisionOccurred){
-  if(yPos > TRACK_LENGTH){
+function updateGameStatus(collisionOccurred) {
+  if (yPos > TRACK_LENGTH) {
     gameState = GAME_OVER_WON;
-  } else if(collisionOccurred){
+  } else if (collisionOccurred) {
     gameState = GAME_OVER_LOST;
   }
 }
 
-function checkCollisions(){
-  if(Math.abs(xPos) > BOUND){
+function checkCollisions() {
+  if (Math.abs(xPos) > BOUND) {
     return true;
   } //TODO: check obstacle collisions
 }
 
-function getRotationValue(){
-  return Math.atan(forwardSpeed/velocity);
+function getRotationValue() {
+  return Math.atan(forwardSpeed / velocity);
 }

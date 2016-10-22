@@ -31,7 +31,7 @@ var IO = {
   bindEvents: function() {
     IO.socket.on('connected', IO.onConnected);
     IO.socket.on('IHaveReceivedYourCoordinates', IO.serverReceivedCoord);
-    IO.socket.on('GameEnded', IO.gameEnded);
+    //IO.socket.on('GameEnded', IO.gameEnded);
     IO.socket.on('SendDataToClient', IO.updateDataToClient);
 
   },
@@ -114,26 +114,26 @@ var IO = {
     var ctx = IO.canvas.getContext("2d");
     IO.drawRoad();
     IO.drawCar();
-    alert("ok");
+    //alert("ok");
     var randStartX = Math.random() * (IO.canvas.width - 100) + 50;
     IO.drawObstacle(ctx, randStartX, 0);
-    alert("here?");
+    //alert("here?");
     //setTimeout(function() {
-    var startTime = (new Date()).getTime();
+    //var startTime = (new Date()).getTime();
     //  IO.animate(ctx, randStartX, 0, startTime);
     //}, 1000);
-    alert("doggy");
-    IO.gameLoop(ctx, randStartX, 0, startTime);
+    //alert("doggy");
+    IO.gameLoop(ctx, randStartX, 0);
   },
-  gameLoop: function(ctx, xCoor, yCoor, startTime) {
-    while (true) {
-      alert("HERe");
-      alert("MORE");
-      setTimeout(function() {
-        var startTime = (new Date()).getTime();
-        IO.animate(ctx, xCoor, yCoor + 5, startTime);
-      }, 100);
-    }
+  gameLoop: function(ctx, xCoor, yCoor) {
+
+    //setTimeout(function() {
+    //alert("in timeout");
+    //var startTime = (new Date()).getTime();
+    //yCoor += 5;
+    IO.animate(ctx, xCoor, yCoor);
+    //}, 100);
+    setTimeout('', 100);
   },
 
   drawCar: function() {
@@ -155,6 +155,7 @@ var IO = {
   },
 
   drawRoad: function() {
+    alert("drawing rode");
     console.log('PositionX: ' + IO.xPos);
     console.log('PositionY: ' + IO.yPos);
     var changeInX = -(IO.xPos - IO.canvas.width / 2);
@@ -180,10 +181,11 @@ var IO = {
     road.stroke();
   },
 
-  animate: function(ctx, xCoor, yCoor, startTime) {
+  animate: function(ctx, xCoor, yCoor) {
     // update
-    var time = (new Date()).getTime() - startTime;
-
+    //var time = (new Date()).getTime() - startTime;
+    console.log('animate ' + IO.xPos + ' ' + IO.yPos);
+    alert("wow");
     IO.drawRoad();
     IO.drawCar();
     //ctx.clearRect(xCoor,yCoor,150,20);
@@ -194,7 +196,8 @@ var IO = {
     }
     IO.drawObstacle(ctx, xCoor + randX, yCoor);
     // request new frame
-
+    IO.bindEvents();
+    IO.gameLoop(ctx, xCoor, yCoor + 5);
   },
   drawObstacle: function(ctx, xCoor, yCoor) {
     ctx.rect(xCoor, yCoor, 150, 20);
