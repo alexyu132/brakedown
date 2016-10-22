@@ -6,11 +6,15 @@
  *
  * @type {{init: Function, bindEvents: Function, onConnected: Function, onNewGameCreated: Function, playerJoinedRoom: Function, beginNewGame: Function, onNewWordData: Function, hostCheckAnswer: Function, gameOver: Function, error: Function}}
  */
+var oldAngle = 0;
+var turnAccel = 0;
+
 var IO = {
 
   bounds: 0,
 
   trackLength: 0,
+
   /**
    * This is called when the page is displayed. It connects the Socket.IO client
    * to the Socket.IO server
@@ -73,11 +77,15 @@ var IO = {
           // console.log(i + "leftBound: " + obstacleArray[i].leftBound);
           // console.log(i + "rightBound: " + obstacleArray[i].rightBound);
           // console.log(i + "yLocation: " + obstacleArray[i].yLocation);
-          car.fillRect(obstacleArray[i].leftBound, -obstacleArray[i].yLocation - 50, obstacleArray[i].rightBound - obstacleArray[i].leftBound, 50);
+          car.fillRect(obstacleArray[i].leftBound, -obstacleArray[i].yLocation - 80, obstacleArray[i].rightBound - obstacleArray[i].leftBound, 50);
         }
 
+        turnAccel = (angle - oldAngle) * 0.3;
+
+        oldAngle += turnAccel;
+
         car.translate(xPos, yPos + 20);
-        car.rotate(angle);
+        car.rotate(oldAngle);
         car.translate(-xPos, -yPos + 20);
 
         car.beginPath();

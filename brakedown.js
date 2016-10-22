@@ -47,7 +47,7 @@ const BOUND = 500; //distance from center that counts as out of bounds
 const TRACK_LENGTH = 10000;
 const CAR_WIDTH = 20;
 const CAR_HEIGHT = 35;
-const OBSTACLE_SPACING = 1000;
+const OBSTACLE_SPACING = 700;
 
 //game states
 const GAME_IN_PROGRESS = 1;
@@ -63,7 +63,7 @@ var Obstacle = function(leftBound,size, yLocation) {
 
 Obstacle.prototype.checkCollision = function() {
     if(xPos > this.leftBound - CAR_WIDTH/2 && xPos < this.rightBound + CAR_WIDTH/2) {
-    if(yPos > this.yLocation && yPos < this.yLocation + CAR_HEIGHT + 50){  //50 is obstacle height - can change later
+    if(yPos > this.yLocation && yPos < this.yLocation + CAR_HEIGHT + 80){  //50 is obstacle height - can change later
       return true;
     }
   }
