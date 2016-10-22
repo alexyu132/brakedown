@@ -32,7 +32,7 @@ var IO = {
 
     },
 
-    updateDataToClient: function(xPos, yPos, velocity, obstacleArray) {
+    updateDataToClient: function(xPos, yPos, angle, obstacleArray) {
         //console.log('PositionX: ' + xPos);
         //console.log('PositionY: ' + yPos);
         //console.log('Velocity: ' + velocity);
@@ -50,12 +50,24 @@ var IO = {
 
         car.save();
 
-        car.translate(-xPos + canvas.width / 2, -yPos + canvas.height / 2);
+        car.translate(-xPos + canvas.width / 2, -yPos + canvas.height *.75);
 
-      //  car.fillStyle = "#222222";
-      //  car.fillRect(-bounds, -trackLength, bounds * 2, trackLength);
+        car.fillStyle = "#222222";
+        car.fillRect(-IO.bounds, -IO.trackLength, IO.bounds * 2, IO.trackLength * 2);
+
 
         car.fillStyle = "#FF0000";
+        //car.fillRect(obstacleArray[0].leftBound, obstacleArray[0].yLocation, obstacleArray[0].rightBound - obstacleArray[0].leftBound, 50);
+
+        for(var i = 0; i < obstacleArray.length; i++) {
+          console.log(i + "leftBound: " + obstacleArray[i].leftBound);
+          console.log(i + "rightBound: " + obstacleArray[i].rightBound);
+          console.log(i + "yLocation: " + obstacleArray[i].yLocation);
+          car.fillRect(obstacleArray[i].leftBound, obstacleArray[i].yLocation + 50, obstacleArray[i].rightBound - obstacleArray[i].leftBound, 50);
+        }
+
+        // car.save();
+        // car.rotate(angle);
         car.beginPath();
         car.moveTo(xPos, yPos);
 
@@ -69,7 +81,7 @@ var IO = {
 
         car.restore();
 
-        console.log(yPos);
+        console.log("Player yPos: " + yPos);
 
 
     },
@@ -123,7 +135,7 @@ var IO = {
 
         setInterval(function() {
             // method to be executed;
-            console.log(mouseX);
+            //console.log(mouseX);
             IO.socket.emit('CoordinateData', mouseX, window.innerWidth);
         }, 100);
     },

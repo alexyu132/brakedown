@@ -58,7 +58,7 @@ const GAME_OVER_LOST = 3;
 var Obstacle = function(leftBound,size, yLocation) {
   this.leftBound = leftBound;
   this.rightBound = leftBound + size;
-  this.yLocation = yLocation;
+  this.yLocation = -yLocation;
 }
 
 Obstacle.prototype.checkCollision = function() {
@@ -74,7 +74,7 @@ var xPos = 0.0, yPos = 0.0, velocity = 0.0; // velocity = left/right speed
 
 var velocityMultiplier = 0.5; //TODO: calibrate this by testing
 
-var forwardSpeed = .01;
+var forwardSpeed = 0.3;
 var numPlayers = 0;
 
 
