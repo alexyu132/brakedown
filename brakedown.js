@@ -14,7 +14,7 @@ exports.initGame = function(sio, socket) {
     gameSocket.emit('connected', BOUND, TRACK_LENGTH);
     numPlayers++;
     console.log('numplayers:' + numPlayers);
-
+    gameSocket.emit('giveNumPlayers', numPlayers);
     // Host Events
     //gameSocket.on('IAmReadyToPlay', hostReady);
     gameSocket.on('CoordinateData', updateDataToServer);

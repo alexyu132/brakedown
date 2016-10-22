@@ -8,6 +8,7 @@
  */
 var oldAngle = 0;
 var turnAccel = 0;
+var numPlayers = 0;
 
 var IO = {
 
@@ -33,7 +34,11 @@ var IO = {
     IO.socket.on('IHaveReceivedYourCoordinates', IO.serverReceivedCoord);
     IO.socket.on('GameEnded', IO.gameEnded);
     IO.socket.on('SendDataToClient', IO.updateDataToClient);
+    IO.socket.on('giveNumPlayers', IO.updateNumPlayers);
+  },
 
+  updateNumPlayers: function(numPlayersReceived) {
+    numPlayers = numPlayersReceived;
   },
 
   updateDataToClient: function(xPos, yPos, angle, obstacleArray) {
@@ -95,6 +100,7 @@ var IO = {
         80, obstacleArray[i].rightBound - obstacleArray[i].leftBound, 80);
     }
 
+
     turnAccel = (angle - oldAngle) * 0.3;
 
     oldAngle += turnAccel;
@@ -113,8 +119,12 @@ var IO = {
     car.closePath();
     car.fill();
     car.stroke();
+
     car.restore();
 
+    car.fillStyle = "#0000ff";
+    car.font = "25px Verdana";
+    car.fillText(numPlayers + " player(s) online!", window.innerWidth - 250, 30);
 
     console.log("Player yPos: " + yPos);
 
