@@ -53,7 +53,7 @@ function gameloop() {
     gameSocket.emit('GameEnded', false);
   }
 
-  gameSocket.emit('SendDataToClient', xPos, yPos, velocity);
+  gameSocket.emit('SendDataToClient', xPos, yPos, getRotationValue());
 
 }
 
