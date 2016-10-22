@@ -13,7 +13,7 @@ var brakedown = require('./brakedown.js');
 // Create a simple Express application
 
     // Turn down the logging activity
-    app.use(express.logger('dev'));
+    //app.use(express.logger('dev'));
 
     // Serve static html, js, css, and image files from the 'public' directory
     app.use(express.static(path.join(__dirname,'public')));
