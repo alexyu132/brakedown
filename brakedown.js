@@ -43,7 +43,7 @@ var forwardSpeed = 1;
 var numPlayers = 1;
 var gameState = 1;
 
-var timeInterval = 100; //TODO: compute the correct interval
+var timeInterval = 100;
 
 function gameloop() {
   update(timeInterval);
@@ -54,7 +54,6 @@ function gameloop() {
   }
 
   gameSocket.emit('SendDataToClient', xPos, yPos, velocity);
-
 }
 
 
