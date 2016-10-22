@@ -64,7 +64,7 @@ Obstacle.prototype.checkCollision = function() {
 
 var xPos = 0.0, yPos = 0.0, velocity = 0.0; // velocity = left/right speed
 
-var velocityMultiplier = 0.2; //TODO: calibrate this by testing
+var velocityMultiplier = 0.5; //TODO: calibrate this by testing
 
 var forwardSpeed = 1;
 var numPlayers = 0;
