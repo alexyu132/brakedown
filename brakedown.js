@@ -1,6 +1,6 @@
 var io;
 var gameSocket;
-
+var loopIntervalID;
 /**
  * This function is called by index.js to initialize a new game instance.
  *
@@ -16,7 +16,7 @@ exports.initGame = function(sio, socket){
     //gameSocket.on('IAmReadyToPlay', hostReady);
     gameSocket.on('CoordinateData', updateDataToServer);
 
-    setInterval(gameloop, timeInterval);
+    loopIntervalID = setInterval(gameloop, timeInterval);
 }
 
 // function hostReady() {
@@ -37,7 +37,7 @@ const GAME_OVER_LOST = 3;
 
 var xPos = 0.0, yPos = 0.0, velocity = 0.0; // velocity = left/right speed
 
-var velocityMultiplier = 0.001; //TODO: calibrate this by testing
+var velocityMultiplier = 0.01; //TODO: calibrate this by testing
 
 var forwardSpeed = 1;
 var numPlayers = 1;
@@ -46,6 +46,10 @@ var gameState = 1;
 var timeInterval = 100; //TODO: compute the correct interval
 
 function gameloop() {
+  if(gameState != GAME_IN_PROGRESS) {
+    clearInterval(loopIntervalID);
+  }
+
   update(timeInterval);
   if(gameState == GAME_OVER_WON) {
     gameSocket.emit('GameEnded', true);
@@ -59,8 +63,11 @@ function gameloop() {
 
 
 function updateDataToServer(mouseX, windowWidth) {
-  //console.log('Received X coordinate ' + mouseX + " from client!");
-  var playerVelocityInput = (mouseX - windowWidth / 2) * velocityMultiplier;
+  console.log('Received X coordinate ' + mouseX + " from client!");
+  console.log('Current Velocity:' + velocity);
+  var playerVelocityInput = (mouseX - windowWidth / 2.0) / windowWidth;
+  playerVelocityInput = Math.max(-1, Math.min(playerVelocityInput, 1));
+  playerVelocityInput *= * velocityMultiplier;
   updateVelocity(playerVelocityInput);
   //gameSocket.emit('IHaveReceivedYourCoordinates');
 };
@@ -76,8 +83,10 @@ function updatePosition(deltaTime){
 }
 
 function updateVelocity(newVelocity){ //Adds a player's wheel setting to a moving average, asynchronous
+
   velocity -= velocity / numPlayers;  //Call this once per update interval for each user
   velocity += newVelocity / numPlayers;
+
 }
 
 function updateGameStatus(collisionOccurred){
