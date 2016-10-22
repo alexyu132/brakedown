@@ -44,8 +44,8 @@ function update(deltaTime){
 }
 
 function updatePosition(deltaTime){
-  xPos += velocity*deltaTime;
-  yPos += deltaTime*forwardSpeed;
+  xPos += velocity * deltaTime;
+  yPos += deltaTime * forwardSpeed;
 }
 
 function updateVelocity(newVelocity){ //Adds a player's wheel setting to a moving average, asynchronous
@@ -62,12 +62,12 @@ function updateGameStatus(collisionOccurred){
 }
 
 function checkCollisions(){
-  if(Math.abs(xPos)>BOUND){
+  if(Math.abs(xPos) > BOUND){
     return true;
   }
 }
 
 function updateVelocity(newVelocity){ //adds a player's wheel setting to overall
-  velocity += newVelocity/numPlayers;
+  velocity += newVelocity / numPlayers;
 
 }
