@@ -12,10 +12,13 @@ exports.initGame = function(sio, socket){
     io = sio;
     gameSocket = socket;
     gameSocket.emit('connected', BOUND, TRACK_LENGTH);
-
+    numPlayers++;
     // Host Events
     //gameSocket.on('IAmReadyToPlay', hostReady);
     gameSocket.on('CoordinateData', updateDataToServer);
+    gameSocket.on('disconnect', function(){
+      numPlayers--;
+    });
 
     if(!isInitialized){
       generateObstacleArray(OBSTACLE_SPACING);
@@ -66,7 +69,7 @@ var velocityMultiplier = 0.05; //TODO: calibrate this by testing
 var forwardSpeed = 1;
 var numPlayers = 0;
 
-export {numPlayers};
+
 
 var gameState = 1;
 
@@ -75,7 +78,7 @@ var timeInterval = 20;
 var obstacleArray = [];
 
 function gameloop() {
-  if(gameState != GAME_IN_PROGRESS) {
+  if(false){//if(gameState != GAME_IN_PROGRESS) {
     clearInterval(loopIntervalID);
   } else {
 

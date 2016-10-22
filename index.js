@@ -31,11 +31,9 @@ io.set('log level',1);
 // Listen for Socket.IO Connections. Once connected, start the game logic.
 io.sockets.on('connection', function (socket) {
     console.log('Someone has connected!');
-    brakedown.numPlayers++;
     brakedown.initGame(io, socket);
 });
 
-io.sockets.on('disconnect', function (socket) {
+io.sockets.on('disconnect', function () {
     console.log('Someone has disconnected!');
-    brakedown.numPlayers--;
 });
