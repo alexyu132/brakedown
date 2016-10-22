@@ -12,7 +12,7 @@ exports.initGame = function(sio, socket){
     // Host Events
     gameSocket.on('IAmReadyToPlay', hostReady);
     gameSocket.on('CoordinateData', receivedCoordinates);
-
+    //gameSocket.on('CoordinateData', )
 }
 
 function hostReady() {
@@ -21,6 +21,7 @@ function hostReady() {
 
 function receivedCoordinates(mouseX) {
     console.log('Received X coordinate '+mouseX+" from client!");
+    gameSocket.emit('IHaveReceivedYourCoordinates');
 };
 
 // Game Logic
@@ -41,6 +42,7 @@ var forwardSpeed = 1;
 var numPlayers = 0;
 
 var gameState = 1;
+var deltaTime = 100; //milliseconds
 
 
 function update(deltaTime){
