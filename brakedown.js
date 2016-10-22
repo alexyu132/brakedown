@@ -72,7 +72,6 @@ function checkCollisions(){
   }
 }
 
-function updateVelocity(newVelocity){ //adds a player's wheel setting to overall
-  velocity += newVelocity / numPlayers;
-
+function getRotationValue(){
+  return Math.atan(forwardSpeed/velocity);
 }
