@@ -37,7 +37,7 @@ const GAME_OVER_LOST = 3;
 
 var xPos = 0.0, yPos = 0.0, velocity = 0.0; // velocity = left/right speed
 
-var velocityMultiplier = 0.01; //TODO: calibrate this by testing
+var velocityMultiplier = 0.05; //TODO: calibrate this by testing
 
 var forwardSpeed = 1;
 var numPlayers = 1;
@@ -58,7 +58,7 @@ function gameloop() {
   }
 
   gameSocket.emit('SendDataToClient', xPos, yPos, getRotationValue());
- 
+
 }
 
 
@@ -104,5 +104,8 @@ function checkCollisions(){
 }
 
 function getRotationValue(){
+  if(velocity == 0){
+    return Math.PI/2;
+  }
   return Math.atan(forwardSpeed/velocity);
 }
