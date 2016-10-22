@@ -11,6 +11,7 @@ exports.initGame = function(sio, socket){
 
     // Host Events
     gameSocket.on('IAmReadyToPlay', hostReady);
+    gameSocket.on('CoordinateData', receivedCoordinates);
 
 }
 
@@ -18,11 +19,15 @@ function hostReady() {
     console.log('A client is ready to play!');
 };
 
+function receivedCoordinates() {
+    console.log('Receiving coordinates from client!');
+};
+
 // Game Logic
 
 //course variables
-const bound = 500; //distance from center that counts as out of bounds
-const track_length = 10000;
+const BOUND = 500; //distance from center that counts as out of bounds
+const TRACK_LENGTH = 10000;
 
 //game states
 const GAME_IN_PROGRESS = 1;
@@ -44,8 +49,8 @@ function update(deltaTime){
 }
 
 function updatePosition(deltaTime){
-  xPos += velocity*deltaTime;
-  yPos += deltaTime*forwardSpeed;
+  xPos += velocity * deltaTime;
+  yPos += deltaTime * forwardSpeed;
 }
 
 function updateVelocity(newVelocity){ //Adds a player's wheel setting to a moving average, asynchronous
@@ -62,10 +67,12 @@ function updateGameStatus(collisionOccurred){
 }
 
 function checkCollisions(){
-
+  if(Math.abs(xPos) > BOUND){
+    return true;
+  }
 }
 
 function updateVelocity(newVelocity){ //adds a player's wheel setting to overall
-  velocity += newVelocity/numPlayers;
+  velocity += newVelocity / numPlayers;
 
 }
