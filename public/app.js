@@ -48,8 +48,8 @@ var IO = {
         //draw car
         var car = canvas.getContext("2d");
 
-        car.save();
 
+        car.save();
         car.translate(-xPos + canvas.width / 2, -yPos + canvas.height *.75);
 
         car.fillStyle = "#222222";
@@ -60,12 +60,22 @@ var IO = {
         //car.fillRect(obstacleArray[0].leftBound, obstacleArray[0].yLocation, obstacleArray[0].rightBound - obstacleArray[0].leftBound, 50);
 
         for(var i = 0; i < obstacleArray.length; i++) {
-          console.log(i + "leftBound: " + obstacleArray[i].leftBound);
-          console.log(i + "rightBound: " + obstacleArray[i].rightBound);
-          console.log(i + "yLocation: " + obstacleArray[i].yLocation);
+          // console.log(i + "leftBound: " + obstacleArray[i].leftBound);
+          // console.log(i + "rightBound: " + obstacleArray[i].rightBound);
+          // console.log(i + "yLocation: " + obstacleArray[i].yLocation);
           car.fillRect(obstacleArray[i].leftBound, obstacleArray[i].yLocation + 50, obstacleArray[i].rightBound - obstacleArray[i].leftBound, 50);
         }
 
+        //car.restore();
+        //car.translate(-xPos + canvas.width / 2, -yPos + canvas.height *.75);
+        //car.translate(-1*(-xPos + canvas.width / 2), -1*(-yPos + canvas.height *.75));
+        car.translate(xPos, yPos + 10);
+        car.rotate(angle);
+        car.translate(-xPos, -yPos + 10);
+        //car.translate(-xPos + canvas.width / 2, -yPos + canvas.height *.75);
+
+        // car.translate(0,0);
+        // car.rotate(angle);
         // car.save();
         // car.rotate(angle);
         car.beginPath();
@@ -79,7 +89,10 @@ var IO = {
         car.fill();
         car.stroke();
 
+
+
         car.restore();
+
 
         console.log("Player yPos: " + yPos);
 
