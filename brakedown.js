@@ -73,24 +73,23 @@ var numPlayers = 0;
 
 var gameState = 1;
 
-var timeInterval = 20;
+var timeInterval = 40;
 
 var obstacleArray = [];
 
 function gameloop() {
   if(false){//if(gameState != GAME_IN_PROGRESS) {
     clearInterval(loopIntervalID);
+    if(gameState == GAME_OVER_WON) {
+      io.sockets.emit('GameEnded', true);
+    } else if(gameState == GAME_OVER_LOST) {
+      io.sockets.emit('GameEnded', false);
+    }
   } else {
 
   update(timeInterval);
 
-  if(gameState == GAME_OVER_WON) {
-    gameSocket.broadcast.emit('GameEnded', true);
-  } else if(gameState == GAME_OVER_LOST) {
-    gameSocket.broadcast.emit('GameEnded', false);
-  }
-
-  gameSocket.broadcast.emit('SendDataToClient', xPos, yPos, getRotationValue(), obstacleArray);
+  io.sockets.emit('SendDataToClient', xPos, yPos, getRotationValue(), obstacleArray);
 
   console.log(numPlayers);
   }
