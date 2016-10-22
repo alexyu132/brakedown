@@ -38,27 +38,40 @@ var IO = {
         //console.log('Velocity: ' + velocity);
         //console.log(obstacleArray);
 
+        yPos = -yPos;
+
         //update the drawing
         var canvas = document.getElementById("myCanvas");
 
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
         //draw car
-        var ctx = canvas.getContext("2d");
-        ctx.fillStyle = "#FF0000";
-        ctx.beginPath();
-        ctx.moveTo(xPos, canvas.height);
+        var car = canvas.getContext("2d");
 
-        ctx.lineTo(xPos + 20, canvas.height - 20);
-        ctx.lineTo(xPos, canvas.height - 60);
-        ctx.lineTo(xPos - 20, canvas.height - 20);
+        car.save();
 
-        ctx.closePath();
-        ctx.fill();
-        ctx.stroke();
+        car.translate(-xPos + canvas.width / 2, -yPos + canvas.height / 2);
 
-    },
+      //  car.fillStyle = "#222222";
+      //  car.fillRect(-bounds, -trackLength, bounds * 2, trackLength);
 
-    serverReceivedCoord: function() {
-        console.log('The server received the sent coordinates!');
+        car.fillStyle = "#FF0000";
+        car.beginPath();
+        car.moveTo(xPos, yPos);
+
+        car.lineTo(xPos + 20, yPos + 20);
+        car.lineTo(xPos, yPos - 20);
+        car.lineTo(xPos - 20, yPos + 20);
+
+        car.closePath();
+        car.fill();
+        car.stroke();
+
+        car.restore();
+
+        console.log(yPos);
+
+
     },
 
     gameEnded(playerWon) {
