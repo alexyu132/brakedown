@@ -36,6 +36,7 @@ jQuery(function($) {
             console.log('PositionX: ' + xPos);
             console.log('PositionY: ' + yPos);
             console.log('Velocity: ' + velocity);
+		IO.socket.emit('canvasApp',xPos);
         }, //TODO: update canvas based on these values
 
         gameEnded(playerWon) {
@@ -118,6 +119,7 @@ function canvasApp(){
 		var car = canvas.getContext("2d");
 		car.fillStyle = "#FF0000";
 		car.beginPath();
+		//car.moveTo(xPos,canvas.height-20);
 		car.moveTo(canvas.width/2-20,canvas.height-20);
 		car.lineTo(canvas.width/2+20, canvas.height -20);
 		car.lineTo (canvas.width/2, canvas.height -60);
@@ -144,38 +146,38 @@ function canvasApp(){
       		road.stroke();
 	}
 
-	function animate(ctx,centerX,centerY,startTime) {
+	function animate(ctx,xCoor,yCoor,startTime) {
 	        // update
 	        var time = (new Date()).getTime() - startTime;
 
 		drawRoad();
 		drawCar();
-		var randX = -3+Math.random()*7;
-		if (centerY>canvas.height){
-			centerX = Math.random()*(canvas.width-100)+50;
-			centerY = 0;
+		//ctx.clearRect(xCoor,yCoor,150,20);
+		var randX = 0;			
+		if (yCoor>canvas.height){
+			xCoor = Math.random()*(canvas.width-200)+50;
+			yCoor = 0;
 		}
-	        drawObstacle(ctx,centerX+randX,centerY+5);
+	        drawObstacle(ctx,xCoor+randX,yCoor+5);
 	        // request new frame
 	        requestAnimFrame(function() {
-	          animate(ctx,centerX+randX,centerY+5,startTime);
+	          animate(ctx,xCoor+randX,yCoor+5,startTime);
 	        });
       	}
-	function drawObstacle(ctx,centerX,centerY){
-		ctx.rect(centerX-10,centerY+10,20,20);
+	function drawObstacle(ctx,xCoor,yCoor){
+		ctx.rect(xCoor,yCoor,150,20);
 		//ctx.beginPath();
 		//ctx.arc(centerX, centerY, 50, 0, 2 * Math.PI,true);
 		ctx.stroke();
 	}
-	
 	var ctx = canvas.getContext("2d");
 	drawRoad();
 	drawCar();
 	//alert("HI");
 	var randStartX = Math.random()*(canvas.width-100)+50;
-	drawObstacle(ctx,randStartX,40);
+	drawObstacle(ctx,randStartX,0);
 	setTimeout(function() {
         	var startTime = (new Date()).getTime();
-        	animate(ctx,randStartX,40,startTime);
+        	animate(ctx,randStartX,0,startTime);
       	}, 1000);
 }
