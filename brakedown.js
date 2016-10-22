@@ -12,12 +12,15 @@ exports.initGame = function(sio, socket){
     io = sio;
     gameSocket = socket;
     gameSocket.emit('connected', BOUND, TRACK_LENGTH);
+    console.log('numplayers:' + numPlayers);
+
     numPlayers++;
     // Host Events
     //gameSocket.on('IAmReadyToPlay', hostReady);
     gameSocket.on('CoordinateData', updateDataToServer);
     gameSocket.on('disconnect', function(){
       numPlayers--;
+      console.log('numplayers:' + numPlayers);
       if(numPlayers == 0){
         isInitialized = false;
       }
@@ -88,7 +91,7 @@ var obstacleArray = [];
 function gameloop() {
   if(gameState != GAME_IN_PROGRESS||!isInitialized){//if(gameState != GAME_IN_PROGRESS) {
 
-    clearInterval(loopIntervalID);
+  //  clearInterval(loopIntervalID);
     if(gameState == GAME_OVER_WON) {
       io.sockets.emit('GameEnded', true);
     } else if(gameState == GAME_OVER_LOST) {
@@ -97,10 +100,9 @@ function gameloop() {
   } else {
 
   update(timeInterval);
-
+  }
   io.sockets.emit('SendDataToClient', xPos, yPos, getRotationValue(), obstacleArray);
 
-  }
 }
 
 
@@ -125,7 +127,7 @@ function updatePosition(deltaTime){
 }
 
 function updateVelocity(newVelocity){ //Adds a player's wheel setting to a moving average, asynchronous
-
+  if(gameState != GAME_IN_PROGRESS) return;
   velocity -= velocity / numPlayers;  //Call this once per update interval for each user
   velocity += newVelocity / numPlayers;
 
