@@ -46,8 +46,7 @@ var IO = {
 
     setTimeout(function() {
       displayingMessage = false;
-      displayedMessage = "";
-    }, displayTime);
+    }, displayTime+2000);
   },
 
   updateNumPlayers: function(numPlayersReceived) {
@@ -142,8 +141,7 @@ var IO = {
     car.fillText(numPlayers + " player(s) online!", window.innerWidth - 252, 28);
 
     if(displayingMessage) {
-      car.fillStyle = "#66CD00";
-      car.font = "Verdana 48px";
+      car.font = "Arial 66px";
       var messageWidth = car.measureText(displayedMessage).width;
       car.fillText(displayedMessage, (window.innerWidth - messageWidth) / 2, 100);
     }
