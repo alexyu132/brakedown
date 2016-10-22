@@ -1,4 +1,6 @@
-jQuery(function($) {
+
+
+//jQuery(function($) {
     'use strict';
 
     /**
@@ -23,7 +25,6 @@ jQuery(function($) {
         bindEvents: function() {
             IO.socket.on('connected', IO.onConnected);
             IO.socket.on('IHaveReceivedYourCoordinates', IO.serverReceivedCoord );
-            IO.socket.on('SendDataToClient', IO.clientReceivedUpdatedData);
             IO.socket.on('GameEnded', IO.gameEnded)
 
         },
@@ -31,12 +32,6 @@ jQuery(function($) {
         serverReceivedCoord: function() {
             console.log('The server received the sent coordinates!');
         },
-
-        clientReceivedUpdatedData: function(xPos, yPos, velocity) {
-            console.log('PositionX: ' + xPos);
-            console.log('PositionY: ' + yPos);
-            console.log('Velocity: ' + velocity);
-        }, //TODO: update canvas based on these values
 
         gameEnded(playerWon) {
             if(playerWon) {
@@ -104,7 +99,19 @@ jQuery(function($) {
 
     IO.init();
 
-}($));
+//}($));
+
+
+
+IO.socket.on('SendDataToClient', updateDataToClient);
+function updateDataToClient(xPos, yPos, velocity) {
+    console.log('PositionX: ' + xPos);
+    console.log('PositionY: ' + yPos);
+    console.log('Velocity: ' + velocity);
+}
+
+
+
 window.addEventListener("load", canvasApp, false);
 function canvasApp(){
 	window.requestAnimFrame = (function(callback) {
@@ -166,10 +173,6 @@ function canvasApp(){
 		//ctx.beginPath();
 		//ctx.arc(centerX, centerY, 50, 0, 2 * Math.PI,true);
 		ctx.stroke();
-<<<<<<< HEAD
-
-=======
->>>>>>> a1dd581c9bb0029fa31d108b3102aee9af7be039
 	}
 
 	var ctx = canvas.getContext("2d");
