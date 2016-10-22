@@ -121,19 +121,17 @@ function canvasApp(){
 	var canvas  = document.getElementById("myCanvas");
 	IO.socket.on('SendDataToClient',drawCar);
 	function drawCar(xPos,yPos,velocity){
-		//alert(yPos);
+		console.log('PositionX: ' + xPos);
+            	console.log('PositionY: ' + yPos);	
 		var car = canvas.getContext("2d");
 		car.fillStyle = "#FF0000";
 		car.beginPath();
-		//alert(xPos);
-		car.moveTo(xPos,yPos);
-		//car.moveTo(canvas.width/2-20,canvas.height-20);
-		//car.lineTo(canvas.width/2+20, canvas.height -20);
-		car.lineTo(xPos+20,yPos-20);
-		car.lineTo(xPos,yPos-60);
-		car.lineTo(xPos-20,yPos-20);	
-		//car.lineTo (canvas.width/2, canvas.height -60);
-		//car.lineTo(canvas.width/2-20,canvas.height-20);
+		car.moveTo(xPos,canvas.height);
+
+		car.lineTo(xPos+20,canvas.height-20);
+		car.lineTo(xPos,canvas.height-60);
+		car.lineTo(xPos-20,canvas.height-20);	
+
 		car.closePath();
 		car.fill();
 		car.stroke();
