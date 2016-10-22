@@ -74,7 +74,7 @@ var xPos = 0.0, yPos = 0.0, velocity = 0.0; // velocity = left/right speed
 
 var velocityMultiplier = 0.5; //TODO: calibrate this by testing
 
-var forwardSpeed = 0.3;
+var forwardSpeed = 0.1;
 var numPlayers = 0;
 
 
@@ -155,9 +155,9 @@ function checkCollisions(){
 
 function getRotationValue(){
   if(velocity == 0){
-    return Math.PI/2;
+    return 0;
   }
-  return Math.atan(forwardSpeed/velocity);
+  return Math.atan(velocity/forwardSpeed);
 }
 
 function generateObstacleArray(spacing) {
