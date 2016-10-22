@@ -10,19 +10,14 @@ exports.initGame = function(sio, socket){
     gameSocket.emit('connected', { message: "You are connected!" });
 
     // Host Events
-    gameSocket.on('IAmReadyToPlay', hostReady);
-    gameSocket.on('CoordinateData', receivedCoordinates);
-    //gameSocket.on('CoordinateData', )
+    //gameSocket.on('IAmReadyToPlay', hostReady);
+    gameSocket.on('CoordinateData', updateDataToServer);
 }
 
-function hostReady() {
-    console.log('A client is ready to play!');
-};
+// function hostReady() {
+//     console.log('A client is ready to play!');
+// };
 
-function receivedCoordinates(mouseX) {
-    console.log('Received X coordinate '+mouseX+" from client!");
-    gameSocket.emit('IHaveReceivedYourCoordinates');
-};
 
 // Game Logic
 
@@ -35,15 +30,21 @@ const GAME_IN_PROGRESS = 1;
 const GAME_OVER_WON = 2;
 const GAME_OVER_LOST = 3;
 
-var xPos=0.0, yPos=0.0, velocity=0.0; // velocity = left/right speed
+var xPos = 0.0, yPos = 0.0, velocity = 0.0; // velocity = left/right speed
+
+var velocityMultiplier = 0.1;
 
 var forwardSpeed = 1;
-
 var numPlayers = 0;
-
 var gameState = 1;
-var deltaTime = 100; //milliseconds
 
+
+function updateDataToServer(mouseX, windowWidth) {
+    console.log('Received X coordinate ' + mouseX + " from client!");
+    var playerVelocityInput = (mouseX - windowWidth / 2) * velocityMultiplier;
+    updateVelocity(playerVelocityInput);
+    //gameSocket.emit('IHaveReceivedYourCoordinates');
+};
 
 function update(deltaTime){
   updatePosition(deltaTime);
