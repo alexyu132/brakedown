@@ -45,11 +45,11 @@ exports.initGame = function(sio, socket) {
 //course variables
 const BOUND = 400; //distance from center that counts as out of bounds
 
-const TRACK_LENGTH = 1000;
+const TRACK_LENGTH = 4000;
 
 const CAR_WIDTH = 20;
 const CAR_HEIGHT = 35;
-const OBSTACLE_SPACING = 700;
+const OBSTACLE_SPACING = 400;
 
 
 //game states
@@ -174,7 +174,7 @@ function getRotationValue() {
 function generateObstacleArray(spacing) {
 
   for (i = spacing; i < TRACK_LENGTH; i += spacing) {
-    obstacleArray.push(new Obstacle(2 * (Math.random() - 0.5) * BOUND, 200 +
+    obstacleArray.push(new Obstacle((Math.random() - 0.7) * 2 * BOUND, 200 +
       Math.random() * BOUND, i));
   }
 }
