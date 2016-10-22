@@ -67,7 +67,7 @@ function updateDataToServer(mouseX, windowWidth) {
   console.log('Current Velocity:' + velocity);
   var playerVelocityInput = (mouseX - windowWidth / 2.0) / windowWidth;
   playerVelocityInput = Math.max(-1, Math.min(playerVelocityInput, 1));
-  playerVelocityInput *= * velocityMultiplier;
+  playerVelocityInput *= velocityMultiplier;
   updateVelocity(playerVelocityInput);
   //gameSocket.emit('IHaveReceivedYourCoordinates');
 };
