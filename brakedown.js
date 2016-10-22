@@ -26,8 +26,8 @@ function receivedCoordinates() {
 // Game Logic
 
 //course variables
-const bound = 500; //distance from center that counts as out of bounds
-const track_length = 10000;
+const BOUND = 500; //distance from center that counts as out of bounds
+const TRACK_LENGTH = 10000;
 
 //game states
 const GAME_IN_PROGRESS = 1;
@@ -67,7 +67,9 @@ function updateGameStatus(collisionOccurred){
 }
 
 function checkCollisions(){
-
+  if(Math.abs(xPos)>BOUND){
+    return true;
+  }
 }
 
 function updateVelocity(newVelocity){ //adds a player's wheel setting to overall
