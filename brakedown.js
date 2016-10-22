@@ -45,8 +45,8 @@ exports.initGame = function(sio, socket){
 //course variables
 const BOUND = 500; //distance from center that counts as out of bounds
 const TRACK_LENGTH = 10000;
-const CAR_WIDTH = 50;
-const CAR_HEIGHT = 75;
+const CAR_WIDTH = 20;
+const CAR_HEIGHT = 35;
 const OBSTACLE_SPACING = 1000;
 
 //game states
@@ -58,12 +58,12 @@ const GAME_OVER_LOST = 3;
 var Obstacle = function(leftBound,size, yLocation) {
   this.leftBound = leftBound;
   this.rightBound = leftBound + size;
-  this.yLocation = -yLocation;
+  this.yLocation = yLocation;
 }
 
 Obstacle.prototype.checkCollision = function() {
-  if(xPos > this.leftBound - CAR_WIDTH && xPos < this.rightBound + CAR_WIDTH) {
-    if(yPos > this.yLocation - CAR_HEIGHT && yPos < this.yLocation + 50 + CAR_HEIGHT){  //50 is obstacle height - can change later
+    if(xPos > this.leftBound - CAR_WIDTH/2 && xPos < this.rightBound + CAR_WIDTH/2) {
+    if(yPos > this.yLocation && yPos < this.yLocation + CAR_HEIGHT + 50){  //50 is obstacle height - can change later
       return true;
     }
   }
@@ -86,7 +86,7 @@ var timeInterval = 40;
 var obstacleArray = [];
 
 function gameloop() {
-  if(false||!isInitialized){//if(gameState != GAME_IN_PROGRESS) {
+  if(gameState != GAME_IN_PROGRESS||!isInitialized){//if(gameState != GAME_IN_PROGRESS) {
     clearInterval(loopIntervalID);
     if(gameState == GAME_OVER_WON) {
       io.sockets.emit('GameEnded', true);
@@ -99,7 +99,6 @@ function gameloop() {
 
   io.sockets.emit('SendDataToClient', xPos, yPos, getRotationValue(), obstacleArray);
 
-  console.log(numPlayers);
   }
 }
 
@@ -145,7 +144,7 @@ function checkCollisions(){
   }
 
   for(i = 0; i < obstacleArray.length; i++) {
-    if(obstacleArray[i].checkCollision()) {
+    if(obstacleArray[i].checkCollision() == true) {
       return true;
     }
   }
@@ -161,7 +160,7 @@ function getRotationValue(){
 }
 
 function generateObstacleArray(spacing) {
-  for(i = 0; i < TRACK_LENGTH; i += spacing){
+  for(i = spacing; i < TRACK_LENGTH; i += spacing){
     obstacleArray.push(new Obstacle(2 * (Math.random() - 0.5) * BOUND, Math.random() * BOUND, i));
   }
 }

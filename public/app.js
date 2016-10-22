@@ -63,27 +63,19 @@ var IO = {
           // console.log(i + "leftBound: " + obstacleArray[i].leftBound);
           // console.log(i + "rightBound: " + obstacleArray[i].rightBound);
           // console.log(i + "yLocation: " + obstacleArray[i].yLocation);
-          car.fillRect(obstacleArray[i].leftBound, obstacleArray[i].yLocation + 50, obstacleArray[i].rightBound - obstacleArray[i].leftBound, 50);
+          car.fillRect(obstacleArray[i].leftBound, -obstacleArray[i].yLocation - 50, obstacleArray[i].rightBound - obstacleArray[i].leftBound, 50);
         }
 
-        //car.restore();
-        //car.translate(-xPos + canvas.width / 2, -yPos + canvas.height *.75);
-        //car.translate(-1*(-xPos + canvas.width / 2), -1*(-yPos + canvas.height *.75));
-        car.translate(xPos, yPos + 10);
+        car.translate(xPos, yPos + 20);
         car.rotate(angle);
-        car.translate(-xPos, -yPos + 10);
-        //car.translate(-xPos + canvas.width / 2, -yPos + canvas.height *.75);
+        car.translate(-xPos, -yPos + 20);
 
-        // car.translate(0,0);
-        // car.rotate(angle);
-        // car.save();
-        // car.rotate(angle);
         car.beginPath();
         car.moveTo(xPos, yPos);
 
-        car.lineTo(xPos + 20, yPos + 20);
-        car.lineTo(xPos, yPos - 20);
-        car.lineTo(xPos - 20, yPos + 20);
+        car.lineTo(xPos + 40, yPos + 40);
+        car.lineTo(xPos, yPos - 40);
+        car.lineTo(xPos - 40, yPos + 40);
 
         car.closePath();
         car.fill();
