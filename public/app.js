@@ -38,7 +38,7 @@ var IO = {
         //console.log('Velocity: ' + velocity);
         //console.log(obstacleArray);
 
-
+        yPos = -yPos;
 
         //update the drawing
         var canvas = document.getElementById("myCanvas");
@@ -48,10 +48,10 @@ var IO = {
         //draw car
 
         var car = canvas.getContext("2d");
-        
+
         car.save();
 
-        car.translate(xPos + canvas.width / 2, yPos + canvas.height / 2);
+        car.translate(-xPos + canvas.width / 2, -yPos + canvas.height / 2);
 
       //  car.fillStyle = "#222222";
       //  car.fillRect(-bounds, -trackLength, bounds * 2, trackLength);
@@ -69,6 +69,8 @@ var IO = {
         car.stroke();
 
         car.restore();
+
+        console.log(yPos);
 
 
 
