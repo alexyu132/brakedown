@@ -35,6 +35,7 @@ var IO = {
     IO.socket.on('GameEnded', IO.gameEnded);
     IO.socket.on('SendDataToClient', IO.updateDataToClient);
     IO.socket.on('giveNumPlayers', IO.updateNumPlayers);
+  //  IO.socket.on('ReceiveMessage',IO.showMessage);
   },
 
   updateNumPlayers: function(numPlayersReceived) {
@@ -101,7 +102,7 @@ var IO = {
     }
 
 
-    turnAccel = (angle - oldAngle) * 0.3;
+    turnAccel = (angle - oldAngle) * 0.2;
 
     oldAngle += turnAccel;
     car.fillStyle = "#ff0000";

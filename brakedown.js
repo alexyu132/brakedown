@@ -1,6 +1,7 @@
 var io;
 var gameSocket;
 var loopIntervalID = -1;
+var endCountDownLoopID = -1;
 var isInitialized = false;
 /**
  * This function is called by index.js to initialize a new game instance.
@@ -11,15 +12,17 @@ var isInitialized = false;
 exports.initGame = function(sio, socket) {
     io = sio;
     gameSocket = socket;
+    gameSocket.reconnection = false;
     gameSocket.emit('connected', BOUND, TRACK_LENGTH);
     numPlayers++;
     console.log('numplayers:' + numPlayers);
-    gameSocket.emit('giveNumPlayers', numPlayers);
+    io.sockets.emit('giveNumPlayers', numPlayers);
     // Host Events
     //gameSocket.on('IAmReadyToPlay', hostReady);
     gameSocket.on('CoordinateData', updateDataToServer);
     gameSocket.on('disconnect', function() {
         numPlayers--;
+        io.sockets.emit('giveNumPlayers', numPlayers);
         console.log('disconnected...numplayers:' + numPlayers);
         if (numPlayers == 0) {
             isInitialized = false;
@@ -54,7 +57,7 @@ const TRACK_LENGTH = 4000;
 
 const CAR_WIDTH = 20;
 const CAR_HEIGHT = 35;
-const OBSTACLE_SPACING = 400;
+const OBSTACLE_SPACING = 375;
 
 
 //game states
@@ -85,7 +88,7 @@ var xPos = 0.0,
 
 var velocityMultiplier = 0.5; //TODO: calibrate this by testing
 
-var forwardSpeed = 0.1;
+var forwardSpeed = 0.14;
 var numPlayers = 0;
 
 var gameState = 1;
@@ -114,7 +117,7 @@ function gameloop() {
 
 
 function updateDataToServer(mouseX, windowWidth) {
-    //  console.log('Received X coordinate ' + mouseX + " from client!");
+      console.log('Received X coordinate ' + mouseX + " from client!" + windowWidth);
     //  console.log('Current Velocity:' + velocity);
     var playerVelocityInput = (mouseX - windowWidth / 2.0) / windowWidth;
     playerVelocityInput = Math.max(-1, Math.min(playerVelocityInput, 1));
@@ -146,6 +149,34 @@ function updateGameStatus(collisionOccurred) {
     } else if (collisionOccurred) {
         gameState = GAME_OVER_LOST;
     }
+
+    if(gameState != GAME_IN_PROGRESS){
+      endLoopCounter = 5;
+      endCountDownLoopID = setInterval(endLoop, 1000);
+    }
+}
+
+var endLoopCounter = 5;
+
+function endLoop() {
+  if(endLoopCounter==5)io.sockets.emit('ReceiveMessage',"You Win", 2000);
+  else if(endLoopCounter==3)io.sockets.emit('ReceiveMessage',"New game in: 3", 1000);
+  else if(endLoopCounter==2)io.sockets.emit('ReceiveMessage',"New game in: 2", 1000);
+  else if(endLoopCounter==1)io.sockets.emit('ReceiveMessage',"New game in: 1", 1000);
+  else if(endLoopCounter==0){
+    clearInterval(endCountDownLoopID);
+    console.log('initializing...numplayers:' + numPlayers);
+    obstacleArray = [];
+    generateObstacleArray(OBSTACLE_SPACING);
+    clearInterval(loopIntervalID);
+    loopIntervalID = setInterval(gameloop, timeInterval);
+    isInitialized = true;
+    gameState = GAME_IN_PROGRESS;
+    xPos = 0;
+    yPos = 0;
+    velocity = 0;
+  }
+  endLoopCounter--;
 }
 
 function checkCollisions() {
@@ -171,6 +202,6 @@ function getRotationValue() {
 
 function generateObstacleArray(spacing) {
     for (i = spacing; i < TRACK_LENGTH; i += spacing) {
-        obstacleArray.push(new Obstacle(2 * (Math.random() - 0.5) * BOUND, 200 + Math.random() * BOUND, i));
+        obstacleArray.push(new Obstacle(2 * (Math.random() - 0.5) * BOUND, 150 + Math.random() * BOUND, i));
     }
 }
