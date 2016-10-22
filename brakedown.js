@@ -11,11 +11,16 @@ exports.initGame = function(sio, socket){
 
     // Host Events
     gameSocket.on('IAmReadyToPlay', hostReady);
+    gameSocket.on('CoordinateData', receivedCoordinates);
 
 }
 
 function hostReady() {
     console.log('A client is ready to play!');
+};
+
+function receivedCoordinates() {
+    console.log('Receiving coordinates from client!');
 };
 
 // Game Logic
