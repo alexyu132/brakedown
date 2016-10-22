@@ -37,17 +37,24 @@ const GAME_OVER_LOST = 3;
 
 var xPos = 0.0, yPos = 0.0, velocity = 0.0; // velocity = left/right speed
 
-var velocityMultiplier = 0.001;
+var velocityMultiplier = 0.001; //TODO: calibrate this by testing
 
 var forwardSpeed = 1;
 var numPlayers = 1;
 var gameState = 1;
 
-var timeInterval = 100; //temporary
+var timeInterval = 100; //TODO: compute the correct interval
 
 function gameloop() {
   update(timeInterval);
+  if(gameState == GAME_OVER_WON) {
+    gameSocket.emit('GameEnded', true);
+  } else if(gameState == GAME_OVER_LOST) {
+    gameSocket.emit('GameEnded', false);
+  }
+
   gameSocket.emit('SendDataToClient', xPos, yPos, velocity);
+
 }
 
 
@@ -60,7 +67,7 @@ function updateDataToServer(mouseX, windowWidth) {
 
 function update(deltaTime){
   updatePosition(deltaTime);
-  //updateGameStatus(checkCollisions());
+  updateGameStatus(checkCollisions());
 }
 
 function updatePosition(deltaTime){
@@ -84,7 +91,7 @@ function updateGameStatus(collisionOccurred){
 function checkCollisions(){
   if(Math.abs(xPos) > BOUND){
     return true;
-  }
+  } //TODO: check obstacle collisions
 }
 
 function getRotationValue(){

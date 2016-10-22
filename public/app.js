@@ -24,6 +24,8 @@ jQuery(function($) {
             IO.socket.on('connected', IO.onConnected);
             IO.socket.on('IHaveReceivedYourCoordinates', IO.serverReceivedCoord );
             IO.socket.on('SendDataToClient', IO.clientReceivedUpdatedData);
+            IO.socket.on('GameEnded', IO.gameEnded)
+
         },
 
         serverReceivedCoord: function() {
@@ -34,7 +36,15 @@ jQuery(function($) {
             console.log('PositionX: ' + xPos);
             console.log('PositionY: ' + yPos);
             console.log('Velocity: ' + velocity);
-        },
+        }, //TODO: update canvas based on these values
+
+        gameEnded(playerWon) {
+            if(playerWon) {
+              console.log('You win!');
+            } else {
+              console.log('You lose!');
+            }
+        }, //TODO: actually end the game, allow user(s) to restart
 
 
         /**
