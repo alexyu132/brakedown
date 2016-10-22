@@ -51,63 +51,76 @@ var IO = {
     canvas.height = window.innerHeight;
     //draw car
     var car = canvas.getContext("2d");
-
-
     car.save();
     var road = car;
+    var checker = car;
+    var line = car;
     //road.save();
+
     road.translate(-xPos + canvas.width / 2, -yPos + canvas.height * .75);
+
     road.fillStyle = "#222222";
     road.fillRect(-IO.bounds, -IO.trackLength, IO.bounds * 2, IO.trackLength *
       2);
 
-    for (var i = 0; i < IO.trackLength / 200; i++) {
-      //console.log(i + "leftBound: " + obstacleArray[i].leftBound);
-      //console.log(i + "DOGGGrightBound: " + obstacleArray[i].rightBound);
-      //console.log(i + "yLocation: " + obstacleArray[i].yLocation);
-      var line = car;
+    for (var i = 0; i < IO.trackLength / 80; i++) {
       line.fillStyle = "#FFFFFF";
       line.fillRect(-10, canvas.height - i * 200, 20, 80);
     }
 
-        car.fillStyle = "#FF0000";
-        //car.fillRect(obstacleArray[0].leftBound, obstacleArray[0].yLocation, obstacleArray[0].rightBound - obstacleArray[0].leftBound, 50);
-
-        for(var i = 0; i < obstacleArray.length; i++) {
-          // console.log(i + "leftBound: " + obstacleArray[i].leftBound);
-          // console.log(i + "rightBound: " + obstacleArray[i].rightBound);
-          // console.log(i + "yLocation: " + obstacleArray[i].yLocation);
-          car.fillRect(obstacleArray[i].leftBound, -obstacleArray[i].yLocation - 80, obstacleArray[i].rightBound - obstacleArray[i].leftBound, 80);
+    var checkSize = IO.bounds / 10;
+    var checkLen = checkSize * 4;
+    checker.fillStyle = "#FF0000";
+    checker.fillRect(-IO.bounds, -IO.trackLength - checkLen, IO.bounds * 2,
+      checkLen);
+    checker.fillStyle = "#FFFFFF";
+    for (var row = 0; row < 10; row++) {
+      for (var col = 0; col < 4; col++) {
+        var whiteRow = 0;
+        if (col == 0 || col == 2) {
+          whiteRow = row * 2;
+        } else {
+          whiteRow = row * 2 + 1;
         }
+        checker.fillRect(-IO.bounds + whiteRow * checkSize, -IO.trackLength -
+          checkLen + col * checkSize, checkSize, checkSize);
+      }
+    }
 
-        turnAccel = (angle - oldAngle) * 0.3;
+    for (var i = 0; i < obstacleArray.length; i++) {
 
-        oldAngle += turnAccel;
+      car.fillRect(obstacleArray[i].leftBound, -obstacleArray[i].yLocation -
+        80, obstacleArray[i].rightBound - obstacleArray[i].leftBound, 50);
+    }
 
-        car.translate(xPos, yPos + 20);
-        car.rotate(oldAngle);
-        car.translate(-xPos, -yPos + 20);
+    turnAccel = (angle - oldAngle) * 0.3;
 
-        car.beginPath();
-        car.moveTo(xPos, yPos);
+    oldAngle += turnAccel;
 
-        car.lineTo(xPos + 40, yPos + 40);
-        car.lineTo(xPos, yPos - 40);
-        car.lineTo(xPos - 40, yPos + 40);
+    car.translate(xPos, yPos + 20);
+    car.rotate(oldAngle);
+    car.translate(-xPos, -yPos + 20);
 
-        car.closePath();
-        car.fill();
-        car.stroke();
+    car.beginPath();
+    car.moveTo(xPos, yPos);
 
+    car.lineTo(xPos + 40, yPos + 40);
+    car.lineTo(xPos, yPos - 40);
+    car.lineTo(xPos - 40, yPos + 40);
 
-
-        car.restore();
-
-
-        console.log("Player yPos: " + yPos);
+    car.closePath();
+    car.fill();
+    car.stroke();
 
 
-    },
+
+    car.restore();
+
+
+    console.log("Player yPos: " + yPos);
+
+
+  },
 
 
   gameEnded(playerWon) {
