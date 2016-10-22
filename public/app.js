@@ -22,8 +22,11 @@ jQuery(function($) {
          */
         bindEvents: function() {
             IO.socket.on('connected', IO.onConnected);
+            IO.socket.on('IHaveReceivedYourCoordinates', IO.serverReceivedCoord );
         },
-
+        serverReceivedCoord: function() {
+            console.log('The server received the sent coordinates!');
+        },
         /**
          * The client is successfully connected!
          */
