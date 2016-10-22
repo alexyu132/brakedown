@@ -125,7 +125,7 @@ function canvasApp(){
 	var canvas  = document.getElementById("myCanvas");
 	IO.socket.on('SendDataToClient',drawCar);
 	function drawCar(xPos,yPos,velocity){
-		alert(xPos);
+		//alert(yPos);
 		var car = canvas.getContext("2d");
 		car.fillStyle = "#FF0000";
 		car.beginPath();
