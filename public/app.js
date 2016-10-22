@@ -166,10 +166,7 @@ function canvasApp(){
 		//ctx.beginPath();
 		//ctx.arc(centerX, centerY, 50, 0, 2 * Math.PI,true);
 		ctx.stroke();
-<<<<<<< HEAD
 
-=======
->>>>>>> a1dd581c9bb0029fa31d108b3102aee9af7be039
 	}
 
 	var ctx = canvas.getContext("2d");
