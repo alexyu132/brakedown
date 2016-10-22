@@ -55,6 +55,7 @@ var IO = {
     var road = car;
     var checker = car;
     var line = car;
+    var obstacle = car;
     //road.save();
 
     road.translate(-xPos + canvas.width / 2, -yPos + canvas.height * .75);
@@ -70,8 +71,8 @@ var IO = {
 
     var checkSize = IO.bounds / 10;
     var checkLen = checkSize * 4;
-    checker.fillStyle = "#FF0000";
-    checker.fillRect(-IO.bounds, -IO.trackLength - checkLen, IO.bounds * 2,
+    checker.fillStyle = "#000000";
+    checker.fillRect(-IO.bounds, -IO.trackLength, IO.bounds * 2,
       checkLen);
     checker.fillStyle = "#FFFFFF";
     for (var row = 0; row < 10; row++) {
@@ -82,21 +83,22 @@ var IO = {
         } else {
           whiteRow = row * 2 + 1;
         }
-        checker.fillRect(-IO.bounds + whiteRow * checkSize, -IO.trackLength -
-          checkLen + col * checkSize, checkSize, checkSize);
+        checker.fillRect(-IO.bounds + whiteRow * checkSize, -IO.trackLength +
+          col * checkSize, checkSize, checkSize);
       }
     }
 
+    obstacle.fillStyle = "#FFEE00";
     for (var i = 0; i < obstacleArray.length; i++) {
 
-      car.fillRect(obstacleArray[i].leftBound, -obstacleArray[i].yLocation -
-        80, obstacleArray[i].rightBound - obstacleArray[i].leftBound, 50);
+      obstacle.fillRect(obstacleArray[i].leftBound, -obstacleArray[i].yLocation -
+        80, obstacleArray[i].rightBound - obstacleArray[i].leftBound, 80);
     }
 
     turnAccel = (angle - oldAngle) * 0.3;
 
     oldAngle += turnAccel;
-
+    car.fillStyle = "#ff0000";
     car.translate(xPos, yPos + 20);
     car.rotate(oldAngle);
     car.translate(-xPos, -yPos + 20);

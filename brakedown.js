@@ -27,7 +27,7 @@ exports.initGame = function(sio, socket) {
     });
 
     if (!isInitialized) {
-      console.log('initializing...numplayers:' + numPlayers);
+        console.log('initializing...numplayers:' + numPlayers);
         obstacleArray = [];
         generateObstacleArray(OBSTACLE_SPACING);
         clearInterval(loopIntervalID);
@@ -48,9 +48,9 @@ exports.initGame = function(sio, socket) {
 // Game Logic
 
 //course variables
-const BOUND = 500; //distance from center that counts as out of bounds
+const BOUND = 400; //distance from center that counts as out of bounds
 
-const TRACK_LENGTH = 700;
+const TRACK_LENGTH = 1000;
 
 const CAR_WIDTH = 20;
 const CAR_HEIGHT = 35;
@@ -70,14 +70,14 @@ var Obstacle = function(leftBound, size, yLocation) {
 }
 
 Obstacle.prototype.checkCollision = function() {
-
-    if (xPos > this.leftBound - CAR_WIDTH / 2 && xPos < this.rightBound + CAR_WIDTH / 2) {
+    if (xPos > this.leftBound - CAR_WIDTH / 2 && xPos < this.rightBound +
+        CAR_WIDTH / 2) {
         if (yPos > this.yLocation && yPos < this.yLocation + CAR_HEIGHT + 80) { //50 is obstacle height - can change later
             return true;
         }
     }
     return false;
-}
+};
 
 var xPos = 0.0,
     yPos = 0.0,
@@ -88,8 +88,6 @@ var velocityMultiplier = 0.5; //TODO: calibrate this by testing
 var forwardSpeed = 0.1;
 var numPlayers = 0;
 
-
-
 var gameState = 1;
 
 var timeInterval = 40;
@@ -97,6 +95,7 @@ var timeInterval = 40;
 var obstacleArray = [];
 
 function gameloop() {
+
 
     if (gameState != GAME_IN_PROGRESS || !isInitialized) { //if(gameState != GAME_IN_PROGRESS) {
 
@@ -154,7 +153,6 @@ function checkCollisions() {
         return true;
     }
 
-
     for (i = 0; i < obstacleArray.length; i++) {
         if (obstacleArray[i].checkCollision() == true) {
             return true;
@@ -172,7 +170,6 @@ function getRotationValue() {
 }
 
 function generateObstacleArray(spacing) {
-
     for (i = spacing; i < TRACK_LENGTH; i += spacing) {
         obstacleArray.push(new Obstacle(2 * (Math.random() - 0.5) * BOUND, 200 + Math.random() * BOUND, i));
     }
