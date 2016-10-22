@@ -77,7 +77,7 @@ var IO = {
           // console.log(i + "leftBound: " + obstacleArray[i].leftBound);
           // console.log(i + "rightBound: " + obstacleArray[i].rightBound);
           // console.log(i + "yLocation: " + obstacleArray[i].yLocation);
-          car.fillRect(obstacleArray[i].leftBound, -obstacleArray[i].yLocation - 80, obstacleArray[i].rightBound - obstacleArray[i].leftBound, 50);
+          car.fillRect(obstacleArray[i].leftBound, -obstacleArray[i].yLocation - 80, obstacleArray[i].rightBound - obstacleArray[i].leftBound, 80);
         }
 
         turnAccel = (angle - oldAngle) * 0.3;
