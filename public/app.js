@@ -144,8 +144,8 @@ var IO = {
     if(displayingMessage) {
       car.fillStyle = "#66CD00";
       car.font = "Verdana 48px";
-      var messageWidth = ctx.measureText(receivedMessage).width;
-      car.fillText(receivedMessage, (window.innerWidth - messageWidth) / 2, 100);
+      var messageWidth = car.measureText(displayedMessage).width;
+      car.fillText(displayedMessage, (window.innerWidth - messageWidth) / 2, 100);
     }
     //console.log("Player yPos: " + yPos);
 
