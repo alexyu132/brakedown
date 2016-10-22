@@ -66,42 +66,6 @@ var IO = {
       line.fillRect(-10, canvas.height - i * 200, 20, 80);
     }
 
-
-    car.fillStyle = "#FF0000";
-    //car.fillRect(obstacleArray[0].leftBound, obstacleArray[0].yLocation, obstacleArray[0].rightBound - obstacleArray[0].leftBound, 50);
-
-    for (var i = 0; i < obstacleArray.length; i++) {
-      // console.log(i + "leftBound: " + obstacleArray[i].leftBound);
-      // console.log(i + "rightBound: " + obstacleArray[i].rightBound);
-      // console.log(i + "yLocation: " + obstacleArray[i].yLocation);
-      car.fillRect(obstacleArray[i].leftBound, obstacleArray[i].yLocation +
-        50, obstacleArray[i].rightBound - obstacleArray[i].leftBound, 50);
-    }
-
-    //car.restore();
-    //car.translate(-xPos + canvas.width / 2, -yPos + canvas.height *.75);
-    //car.translate(-1*(-xPos + canvas.width / 2), -1*(-yPos + canvas.height *.75));
-    car.translate(xPos, yPos + 10);
-    car.rotate(angle);
-    car.translate(-xPos, -yPos + 10);
-    //car.translate(-xPos + canvas.width / 2, -yPos + canvas.height *.75);
-
-    // car.translate(0,0);
-    // car.rotate(angle);
-    // car.save();
-    // car.rotate(angle);
-    car.beginPath();
-    car.moveTo(xPos, yPos);
-
-    car.lineTo(xPos + 20, yPos + 20);
-    car.lineTo(xPos, yPos - 20);
-    car.lineTo(xPos - 20, yPos + 20);
-
-    car.closePath();
-    car.fill();
-    car.stroke();
-
-<<<<<<< HEAD
         car.fillStyle = "#FF0000";
         //car.fillRect(obstacleArray[0].leftBound, obstacleArray[0].yLocation, obstacleArray[0].rightBound - obstacleArray[0].leftBound, 50);
 
@@ -137,40 +101,6 @@ var IO = {
 
     },
 
-    gameEnded(playerWon) {
-        if (playerWon) {
-            console.log('You win!');
-        } else {
-            console.log('You lose!');
-        }
-    }, //TODO: actually end the game, allow user(s) to restart
-
-
-    /**
-     * The client is successfully connected!
-     */
-    onConnected: function(bounds, trackLength) {
-        // Cache a copy of the client's socket.IO session ID on the App
-        IO.bounds = bounds;
-        IO.trackLength = trackLength;
-        console.log('bounds:' + bounds + " track length:" + trackLength);
-        //IO.socket.emit('IAmReadyToPlay');
-        var mouseX = 0;
-        document.onmousemove = handleMouseMove;
-
-        function handleMouseMove(event) {
-            var dot, eventDoc, doc, body, pageX, pageY;
-=======
->>>>>>> 875abd12c3e5b9f2b3397cea9391f8585eb8d569
-
-
-    car.restore();
-
-
-    console.log("Player yPos: " + yPos);
-
-
-  },
 
   gameEnded(playerWon) {
     if (playerWon) {
