@@ -105,3 +105,78 @@ jQuery(function($) {
     IO.init();
 
 }($));
+window.addEventListener("load", canvasApp, false);
+function canvasApp(){	
+	window.requestAnimFrame = (function(callback) {
+        	return window.requestAnimationFrame || window.webkitRequestAnimationFrame || 		window.mozRequestAnimationFrame || window.oRequestAnimationFrame || window.msRequestAnimationFrame ||
+        	function(callback) {
+       		   window.setTimeout(callback, 1000 / 60);
+       		};
+      	})();
+	var canvas  = document.getElementById("myCanvas");
+	function drawCar(){
+		var car = canvas.getContext("2d");
+		car.fillStyle = "#FF0000";
+		car.beginPath();
+		car.moveTo(canvas.width/2-20,canvas.height-20);
+		car.lineTo(canvas.width/2+20, canvas.height -20);
+		car.lineTo (canvas.width/2, canvas.height -60);
+		car.lineTo(canvas.width/2-20,canvas.height-20);
+		car.closePath();
+		car.fill();
+		car.stroke();
+	}
+	function drawRoad(){
+		var grass = canvas.getContext("2d");
+      		grass.fillStyle = "#66cc00";
+      		grass.fillRect(0,0,canvas.width,canvas.height);
+
+		var road = canvas.getContext("2d");
+		road.fillStyle = "#F8A757";
+      		road.beginPath();
+      		road.moveTo(canvas.width/4,0);
+      		road.lineTo(canvas.width/4,canvas.height);
+      		road.lineTo(3*canvas.width/4,canvas.height);
+      		road.lineTo(3*canvas.width/4,0);
+      		road.lineTo(canvas.width/4,0);
+      		road.closePath();
+      		road.fill();
+      		road.stroke();
+	}
+
+	function animate(ctx,centerX,centerY,startTime) {
+	        // update
+	        var time = (new Date()).getTime() - startTime;
+
+		drawRoad();
+		drawCar();
+		var randX = -3+Math.random()*7;
+		if (centerY>canvas.height){
+			centerX = Math.random()*(canvas.width-100)+50;
+			centerY = 0;
+		}
+	        drawObstacle(ctx,centerX+randX,centerY+5);
+	        // request new frame
+	        requestAnimFrame(function() {
+	          animate(ctx,centerX+randX,centerY+5,startTime);
+	        });
+      	}
+	function drawObstacle(ctx,centerX,centerY){
+
+		ctx.beginPath();
+		ctx.arc(centerX, centerY, 50, 0, 2 * Math.PI,true);
+		ctx.stroke();
+		
+	}
+	
+	var ctx = canvas.getContext("2d");
+	drawRoad();
+	drawCar();
+	//alert("HI");
+	var randStartX = Math.random()*(canvas.width-100)+50;
+	drawObstacle(ctx,randStartX,40);
+	setTimeout(function() {
+        	var startTime = (new Date()).getTime();
+        	animate(ctx,randStartX,40,startTime);
+      	}, 1000);
+}
