@@ -62,15 +62,118 @@ function gameloop() {
   }
 
   gameSocket.emit('SendDataToClient', xPos, yPos, getRotationValue());
-  IO.animate(ctx, xCoor, yCoor);
+  GG.animate(xCoor, yCoor);
   //}, 100);
   setTimeout('', 100);
+}
+var GG = {
+  var ctx: null;
+  canvasApp: function() {
+      IO.canvas = document.getElementById("myCanvas");
+      var ctx = IO.canvas.getContext("2d");
+      IO.drawRoad();
+      IO.drawCar();
+      //alert("ok");
+      var randStartX = Math.random() * (IO.canvas.width - 100) + 50;
+      GG.drawObstacle(ctx, randStartX, 0);
+      //alert("here?");
+      //setTimeout(function() {
+      //var startTime = (new Date()).getTime();
+      //  IO.animate(ctx, randStartX, 0, startTime);
+      //}, 1000);
+      //alert("doggy");
+      //IO.gameLoop(ctx, randStartX, 0);
+      GG.animate(xCoor, yCoor);
+    },
+    //gameLoop: function(ctx, xCoor, yCoor) {
+
+    //setTimeout(function() {
+    //alert("in timeout");
+    //var startTime = (new Date()).getTime();
+    //yCoor += 5;
+    //IO.animate(ctx, xCoor, yCoor);
+    //}, 100);
+    //setTimeout('', 100);
+    //},
+
+    drawCar: function() {
+      var car = IO.canvas.getContext("2d");
+      car.fillStyle = "#FF0000";
+      car.beginPath();
+      car.moveTo(IO.canvas.width / 2 - 20, IO.canvas.height - 20);
+      car.lineTo(IO.canvas.width / 2 + 20, IO.canvas.height - 20);
+      car.lineTo(IO.canvas.width / 2, IO.canvas.height - 60);
+      car.lineTo(IO.canvas.width / 2 - 20, IO.canvas.height - 20);
+      //car.moveTo(xPos,canvas.height);
+      //car.lineTo(xPos+20,canvas.height-20);
+      //car.lineTo(xPos,canvas.height-60);
+      //car.lineTo(xPos-20,canvas.height-20);
+
+      car.closePath();
+      car.fill();
+      car.stroke();
+    },
+
+    drawRoad: function() {
+      //IO.bindEvents();
+      //IO.socket.on('SendDataToClient', IO.updateDataToClient);
+      //alert("drawing rode");
+      console.log('PositionX: ' + IO.xPos);
+      console.log('PositionY: ' + IO.yPos);
+      var changeInX = -(IO.xPos - IO.canvas.width / 2);
+      //if (changeInX.isNaN()) {
+      //  changeInX = 0;
+      //}
+      //alert("HI");
+      var grass = IO.canvas.getContext("2d");
+      grass.fillStyle = "#66cc00";
+      grass.fillRect(0, 0, IO.canvas.width, IO.canvas.height);
+
+      var road = IO.canvas.getContext("2d");
+      road.fillStyle = "#F8A757";
+      road.beginPath();
+      road.moveTo(IO.canvas.width / 4 + changeInX, 0);
+      road.lineTo(IO.canvas.width / 4 + changeInX, IO.canvas.height);
+      road.lineTo(3 * IO.canvas.width / 4 + changeInX, IO.canvas.height);
+      road.lineTo(3 * IO.canvas.width / 4 + changeInX, 0);
+      road.lineTo(IO.canvas.width / 4 + changeInX, 0);
+      //alert(changeInX);
+      road.closePath();
+      road.fill();
+      road.stroke();
+    },
+
+    animate: function(xCoor, yCoor) {
+      // update
+      //var time = (new Date()).getTime() - startTime;
+      console.log('animate ' + IO.xPos + ' ' + IO.yPos);
+      //alert("wow");
+      IO.drawRoad();
+      IO.drawCar();
+      //ctx.clearRect(xCoor,yCoor,150,20);
+      var randX = 0;
+      if (yCoor > IO.canvas.height) {
+        xCoor = Math.random() * (IO.canvas.width - 200) + 50;
+        yCoor = 0;
+      }
+      IO.drawObstacle(xCoor + randX, yCoor);
+      // request new frame
+      //IO.gameLoop(ctx, xCoor, yCoor + 5);
+      gameLoop();
+    },
+    drawObstacle: function(xCoor, yCoor) {
+      GG.ctx.rect(xCoor, yCoor, 150, 20);
+      //ctx.beginPath();
+      //ctx.arc(centerX, centerY, 50, 0, 2 * Math.PI,true);
+      ctx.stroke();
+
+    }
 }
 
 
 function updateDataToServer(mouseX, windowWidth) {
-  console.log('Received X coordinate ' + mouseX + " from client!");
-  console.log('Current Velocity:' + velocity);
+  //console.log('Received X coordinate ' + mouseX + " from client!");
+  //console.log('Current Velocity:' + velocity);
   var playerVelocityInput = (mouseX - windowWidth / 2.0) / windowWidth;
   playerVelocityInput = Math.max(-1, Math.min(playerVelocityInput, 1));
   playerVelocityInput *= velocityMultiplier;
