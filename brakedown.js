@@ -13,3 +13,26 @@ exports.initGame = function(sio, socket){
     //gameSocket.on('hostCreateNewGame', hostCreateNewGame);
 
 }
+
+
+// Game Logic
+var xPos, yPos, velocity;
+
+var speed = 1;
+
+var numPlayers = 0.0;
+
+function update(deltaTime){
+  //update position
+  //check for collisions and update game state as necessary
+}
+
+function updatePosition(deltaTime){
+  xPos += velocity*deltaTime;
+  yPos += deltaTime*speed;
+}
+
+function updateVelocity(newVelocity){ //adds a player's wheel setting to overall
+  velocity += newVelocity/numPlayers;
+  
+}
