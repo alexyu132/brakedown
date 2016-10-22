@@ -12,6 +12,7 @@ var isInitialized = false;
 exports.initGame = function(sio, socket) {
     io = sio;
     gameSocket = socket;
+    gameSocket.pingTimeout = 3000;
     gameSocket.reconnection = false;
     gameSocket.emit('connected', BOUND, TRACK_LENGTH);
     numPlayers++;

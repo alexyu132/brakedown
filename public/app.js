@@ -35,7 +35,21 @@ var IO = {
     IO.socket.on('GameEnded', IO.gameEnded);
     IO.socket.on('SendDataToClient', IO.updateDataToClient);
     IO.socket.on('giveNumPlayers', IO.updateNumPlayers);
-  //  IO.socket.on('ReceiveMessage',IO.showMessage);
+    IO.socket.on('ReceiveMessage', IO.showMessage);
+  },
+
+  showMessage: function(receivedMessage, displayTime) {
+    var canvas = document.getElementById("myCanvas");
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    var ctx = canvas.getContext("2d");
+
+
+    ctx.fillStyle = "#66CD00";
+    ctx.font = "Verdana 48px";
+    var messageWidth = ctx.measureText(receivedMessage).width;
+    ctx.fillText(receivedMessage, (window.innerWidth - messageWidth) / 2, 100);
+
   },
 
   updateNumPlayers: function(numPlayersReceived) {
@@ -129,7 +143,7 @@ var IO = {
     car.fillStyle = "#66CD00";
     car.fillText(numPlayers + " player(s) online!", window.innerWidth - 252, 28);
 
-    console.log("Player yPos: " + yPos);
+    //console.log("Player yPos: " + yPos);
 
 
   },
