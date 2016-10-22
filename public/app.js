@@ -42,20 +42,18 @@ var IO = {
         var canvas = document.getElementById("myCanvas");
 
         //draw car
+        var ctx = canvas.getContext("2d");
+        ctx.fillStyle = "#FF0000";
+        ctx.beginPath();
+        ctx.moveTo(xPos, canvas.height);
 
-        var car = canvas.getContext("2d");
-        car.fillStyle = "#FF0000";
-        car.beginPath();
-        car.moveTo(xPos, canvas.height);
+        ctx.lineTo(xPos + 20, canvas.height - 20);
+        ctx.lineTo(xPos, canvas.height - 60);
+        ctx.lineTo(xPos - 20, canvas.height - 20);
 
-        car.lineTo(xPos + 20, canvas.height - 20);
-        car.lineTo(xPos, canvas.height - 60);
-        car.lineTo(xPos - 20, canvas.height - 20);
-
-        car.closePath();
-        car.fill();
-        car.stroke();
-
+        ctx.closePath();
+        ctx.fill();
+        ctx.stroke();
 
     },
 
