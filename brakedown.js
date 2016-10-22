@@ -19,8 +19,9 @@ function hostReady() {
     console.log('A client is ready to play!');
 };
 
-function receivedCoordinates() {
-    console.log('Receiving coordinates from client!');
+function receivedCoordinates(mouseX) {
+    console.log('Received X coordinate '+mouseX+" from client!");
+    gameSocket.emit('IHaveReceivedYourCoordinates');
 };
 
 // Game Logic
