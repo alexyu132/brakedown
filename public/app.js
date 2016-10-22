@@ -1,4 +1,5 @@
-
+var xPos;
+var yPos;
 
 //jQuery(function($) {
     'use strict';
@@ -108,8 +109,9 @@ function updateDataToClient(xPos, yPos, velocity) {
     console.log('PositionX: ' + xPos);
     console.log('PositionY: ' + yPos);
     console.log('Velocity: ' + velocity);
+	this.xPos = xPos;
+	this.yPos = yPos;
 }
-
 
 
 window.addEventListener("load", canvasApp, false);
@@ -121,15 +123,21 @@ function canvasApp(){
        		};
       	})();
 	var canvas  = document.getElementById("myCanvas");
-	function drawCar(){
+	IO.socket.on('SendDataToClient',drawCar);
+	function drawCar(xPos,yPos,velocity){
+		alert(xPos);
 		var car = canvas.getContext("2d");
 		car.fillStyle = "#FF0000";
 		car.beginPath();
-		//car.moveTo(xPos,canvas.height-20);
-		car.moveTo(canvas.width/2-20,canvas.height-20);
-		car.lineTo(canvas.width/2+20, canvas.height -20);
-		car.lineTo (canvas.width/2, canvas.height -60);
-		car.lineTo(canvas.width/2-20,canvas.height-20);
+		//alert(xPos);
+		car.moveTo(xPos,yPos);
+		//car.moveTo(canvas.width/2-20,canvas.height-20);
+		//car.lineTo(canvas.width/2+20, canvas.height -20);
+		car.lineTo(xPos+20,yPos-20);
+		car.lineTo(xPos,yPos-60);
+		car.lineTo(xPos-20,yPos-20);	
+		//car.lineTo (canvas.width/2, canvas.height -60);
+		//car.lineTo(canvas.width/2-20,canvas.height-20);
 		car.closePath();
 		car.fill();
 		car.stroke();
@@ -157,14 +165,14 @@ function canvasApp(){
 	        var time = (new Date()).getTime() - startTime;
 
 		drawRoad();
-		drawCar();
+		//drawCar();
 		//ctx.clearRect(xCoor,yCoor,150,20);
 		var randX = 0;
 		if (yCoor>canvas.height){
 			xCoor = Math.random()*(canvas.width-200)+50;
 			yCoor = 0;
 		}
-	        drawObstacle(ctx,xCoor+randX,yCoor+5);
+	        drawObstacle(ctx,xCoor+randX,yCoor);
 	        // request new frame
 	        requestAnimFrame(function() {
 	          animate(ctx,xCoor+randX,yCoor+5,startTime);
@@ -176,7 +184,7 @@ function canvasApp(){
 		//ctx.arc(centerX, centerY, 50, 0, 2 * Math.PI,true);
 		ctx.stroke();
 	}
-
+	//alert("HELO?");
 	var ctx = canvas.getContext("2d");
 	drawRoad();
 	drawCar();
