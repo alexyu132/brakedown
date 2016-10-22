@@ -18,6 +18,9 @@ exports.initGame = function(sio, socket){
     gameSocket.on('CoordinateData', updateDataToServer);
     gameSocket.on('disconnect', function(){
       numPlayers--;
+      if(numPlayers == 0){
+        isInitialized = false;
+      }
     });
 
     if(!isInitialized){
