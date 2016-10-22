@@ -33,3 +33,8 @@ io.sockets.on('connection', function (socket) {
     console.log('Someone has connected!');
     brakedown.initGame(io, socket);
 });
+
+// Listen for Socket.IO Connections. Once connected, start the game logic.
+io.sockets.on('IAmReadyToPlay', function (socket) {
+    console.log('A client is ready to play!');
+});
