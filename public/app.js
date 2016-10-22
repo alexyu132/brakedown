@@ -162,11 +162,10 @@ function canvasApp(){
 	        });
       	}
 	function drawObstacle(ctx,centerX,centerY){
-
-		ctx.beginPath();
-		ctx.arc(centerX, centerY, 50, 0, 2 * Math.PI,true);
+		ctx.rect(centerX-10,centerY+10,20,20);
+		//ctx.beginPath();
+		//ctx.arc(centerX, centerY, 50, 0, 2 * Math.PI,true);
 		ctx.stroke();
-		
 	}
 	
 	var ctx = canvas.getContext("2d");
