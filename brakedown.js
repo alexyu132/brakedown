@@ -122,7 +122,15 @@ function updateGameStatus(collisionOccurred){
 function checkCollisions(){
   if(Math.abs(xPos) > BOUND){
     return true;
-  } //TODO: check obstacle collisions
+  }
+
+  for(i = 0; i < obstacleArray.length; i++) {
+    if(obstacleArray[i].checkCollision()) {
+      return true;
+    }
+  }
+
+  return false;
 }
 
 function getRotationValue(){
