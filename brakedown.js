@@ -29,11 +29,29 @@ exports.initGame = function(sio, socket){
 //course variables
 const BOUND = 500; //distance from center that counts as out of bounds
 const TRACK_LENGTH = 10000;
+const CAR_WIDTH = 50;
+const CAR_HEIGHT = 75;
 
 //game states
 const GAME_IN_PROGRESS = 1;
 const GAME_OVER_WON = 2;
 const GAME_OVER_LOST = 3;
+
+//obstacle class def
+var Obstacle = function(leftBound,rightBound, yLocation) {
+  this.leftBound = leftBound;
+  this.rightBound = rightBound;
+  this.yLocation = yLocation;
+}
+
+Obstacle.prototype.checkCollision = function() {
+  if(xPos > leftBound - CAR_WIDTH && xPos < rightBound + CAR_WIDTH) {
+    if(yPos > yLocation - CAR_HEIGHT && yPos < yLocation + 50 + CAR_HEIGHT){  //50 is obstacle height - can change later
+      return true;
+    }
+  }
+  return false;
+}
 
 var xPos = 0.0, yPos = 0.0, velocity = 0.0; // velocity = left/right speed
 
@@ -45,12 +63,13 @@ var gameState = 1;
 
 var timeInterval = 100;
 
+
+
 function gameloop() {
-  if(gameState != GAME_IN_PROGRESS) {
-    clearInterval(loopIntervalID);
+  if(gameState == GAME_IN_PROGRESS) {
+    update(timeInterval);
   }
 
-  update(timeInterval);
   if(gameState == GAME_OVER_WON) {
     gameSocket.emit('GameEnded', true);
   } else if(gameState == GAME_OVER_LOST) {
