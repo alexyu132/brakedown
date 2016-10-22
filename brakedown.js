@@ -50,11 +50,11 @@ exports.initGame = function(sio, socket) {
 //course variables
 const BOUND = 400; //distance from center that counts as out of bounds
 
-const TRACK_LENGTH = 1000;
+const TRACK_LENGTH = 4000;
 
 const CAR_WIDTH = 20;
 const CAR_HEIGHT = 35;
-const OBSTACLE_SPACING = 700;
+const OBSTACLE_SPACING = 400;
 
 
 //game states

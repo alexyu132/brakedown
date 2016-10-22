@@ -88,7 +88,7 @@ var IO = {
       }
     }
 
-    obstacle.fillStyle = "#FFEE00";
+    obstacle.fillStyle = "#FF0000";
     for (var i = 0; i < obstacleArray.length; i++) {
 
       obstacle.fillRect(obstacleArray[i].leftBound, -obstacleArray[i].yLocation -
@@ -113,9 +113,6 @@ var IO = {
     car.closePath();
     car.fill();
     car.stroke();
-
-
-
     car.restore();
 
 
