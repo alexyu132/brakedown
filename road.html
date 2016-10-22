@@ -11,7 +11,13 @@
       grass.fillStyle = "#66cc00";
       grass.fillRect(0,0,400,600);
       function drawRoad(oldRoad, newBend){
-      	road.translate(0,40);
+
+	var ctx = canvas.getContext("2d");
+	ctx.beginPath();
+	ctx.arc(100, 75, 50, 0, 2 * Math.PI);
+	ctx.stroke();
+
+      	oldRoad.translate(0,40);
       }
       
       function animate(oldRoad){
@@ -29,7 +35,7 @@
         // clear
         road.clearRect(0, 0, canvas.width, canvas.height);
 
-        drawRectangle(oldRoad, newBend);
+        drawRoad(oldRoad, newBend);
 
         // request new frame
         requestAnimFrame(function() {
