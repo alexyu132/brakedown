@@ -7,7 +7,7 @@ var path = require('path');
 // Create a new instance of Express
 var app = express();
 
-// Import the Anagrammatix game file.
+// Import the Brakedown game file.
 var brakedown = require('./brakedown.js');
 
 // Create a simple Express application
