@@ -24,9 +24,14 @@ exports.initGame = function(sio, socket){
     });
 
     if(!isInitialized){
+      obstacleArray = [];
       generateObstacleArray(OBSTACLE_SPACING);
       loopIntervalID = setInterval(gameloop, timeInterval);
       isInitialized = true;
+      gameState = GAME_IN_PROGRESS;
+      xPos = 0;
+      yPos = 0;
+      velocity = 0;
     }
 }
 
@@ -69,7 +74,7 @@ var xPos = 0.0, yPos = 0.0, velocity = 0.0; // velocity = left/right speed
 
 var velocityMultiplier = 0.5; //TODO: calibrate this by testing
 
-var forwardSpeed = 1;
+var forwardSpeed = .01;
 var numPlayers = 0;
 
 
@@ -81,7 +86,7 @@ var timeInterval = 40;
 var obstacleArray = [];
 
 function gameloop() {
-  if(false){//if(gameState != GAME_IN_PROGRESS) {
+  if(false||!isInitialized){//if(gameState != GAME_IN_PROGRESS) {
     clearInterval(loopIntervalID);
     if(gameState == GAME_OVER_WON) {
       io.sockets.emit('GameEnded', true);
