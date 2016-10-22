@@ -30,6 +30,7 @@ jQuery(function($) {
         onConnected: function() {
             // Cache a copy of the client's socket.IO session ID on the App
             console.log('Connected to server!');
+            IO.socket.emit('IAmReadyToPlay');
         },
 
 

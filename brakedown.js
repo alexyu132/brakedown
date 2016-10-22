@@ -10,10 +10,13 @@ exports.initGame = function(sio, socket){
     gameSocket.emit('connected', { message: "You are connected!" });
 
     // Host Events
-    //gameSocket.on('hostCreateNewGame', hostCreateNewGame);
+    gameSocket.on('IAmReadyToPlay', hostReady);
 
 }
 
+function hostReady() {
+    console.log('A client is ready to play!');
+};
 
 // Game Logic
 var xPos, yPos, velocity;
@@ -34,5 +37,5 @@ function updatePosition(deltaTime){
 
 function updateVelocity(newVelocity){ //adds a player's wheel setting to overall
   velocity += newVelocity/numPlayers;
-  
+
 }
