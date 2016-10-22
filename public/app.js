@@ -1,4 +1,5 @@
-jQuery(function($) {
+
+//jQuery(function($) {
     'use strict';
 
     /**
@@ -23,21 +24,20 @@ jQuery(function($) {
         bindEvents: function() {
             IO.socket.on('connected', IO.onConnected);
             IO.socket.on('IHaveReceivedYourCoordinates', IO.serverReceivedCoord );
-            IO.socket.on('SendDataToClient', IO.clientReceivedUpdatedData);
-            IO.socket.on('GameEnded', IO.gameEnded)
+            IO.socket.on('GameEnded', IO.gameEnded);
+            IO.socket.on('SendDataToClient', IO.updateDataToClient);
 
+        },
+
+        updateDataToClient: function(xPos, yPos, velocity) {
+            console.log('PositionX: ' + xPos);
+            console.log('PositionY: ' + yPos);
+            console.log('Velocity: ' + velocity);
         },
 
         serverReceivedCoord: function() {
             console.log('The server received the sent coordinates!');
         },
-
-        clientReceivedUpdatedData: function(xPos, yPos, velocity) {
-            console.log('PositionX: ' + xPos);
-            console.log('PositionY: ' + yPos);
-            console.log('Velocity: ' + velocity);
-		IO.socket.emit('canvasApp',xPos);
-        }, //TODO: update canvas based on these values
 
         gameEnded(playerWon) {
             if(playerWon) {
@@ -105,7 +105,11 @@ jQuery(function($) {
 
     IO.init();
 
-}($));
+//}($));
+
+
+
+
 window.addEventListener("load", canvasApp, false);
 function canvasApp(){
 	window.requestAnimFrame = (function(callback) {
@@ -115,15 +119,19 @@ function canvasApp(){
        		};
       	})();
 	var canvas  = document.getElementById("myCanvas");
-	function drawCar(){
+	IO.socket.on('SendDataToClient',drawCar);
+	function drawCar(xPos,yPos,velocity){
+		console.log('PositionX: ' + xPos);
+            	console.log('PositionY: ' + yPos);	
 		var car = canvas.getContext("2d");
 		car.fillStyle = "#FF0000";
 		car.beginPath();
-		//car.moveTo(xPos,canvas.height-20);
-		car.moveTo(canvas.width/2-20,canvas.height-20);
-		car.lineTo(canvas.width/2+20, canvas.height -20);
-		car.lineTo (canvas.width/2, canvas.height -60);
-		car.lineTo(canvas.width/2-20,canvas.height-20);
+		car.moveTo(xPos,canvas.height);
+
+		car.lineTo(xPos+20,canvas.height-20);
+		car.lineTo(xPos,canvas.height-60);
+		car.lineTo(xPos-20,canvas.height-20);	
+
 		car.closePath();
 		car.fill();
 		car.stroke();
@@ -151,14 +159,14 @@ function canvasApp(){
 	        var time = (new Date()).getTime() - startTime;
 
 		drawRoad();
-		drawCar();
+		//drawCar();
 		//ctx.clearRect(xCoor,yCoor,150,20);
-		var randX = 0;			
+		var randX = 0;
 		if (yCoor>canvas.height){
 			xCoor = Math.random()*(canvas.width-200)+50;
 			yCoor = 0;
 		}
-	        drawObstacle(ctx,xCoor+randX,yCoor+5);
+	        drawObstacle(ctx,xCoor+randX,yCoor);
 	        // request new frame
 	        requestAnimFrame(function() {
 	          animate(ctx,xCoor+randX,yCoor+5,startTime);
@@ -169,8 +177,9 @@ function canvasApp(){
 		//ctx.beginPath();
 		//ctx.arc(centerX, centerY, 50, 0, 2 * Math.PI,true);
 		ctx.stroke();
-	}
 
+	}
+	//alert("HELO?");
 	var ctx = canvas.getContext("2d");
 	drawRoad();
 	drawCar();
