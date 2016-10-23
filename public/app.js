@@ -43,7 +43,7 @@ var IO = {
     IO.socket.on('SendDataToClient', IO.updateDataToClient);
     IO.socket.on('giveNumPlayers', IO.updateNumPlayers);
     IO.socket.on('ReceiveMessage', IO.showMessage);
-    IO.socket.on('goodEvil', IO.setGoodEvil);
+    //IO.socket.on('goodEvil', IO.setGoodEvil);
     IO.socket.on('NewGame', IO.setGoodEvil);
   },
 
@@ -51,7 +51,7 @@ var IO = {
     IO.socket.emit('RequestTeam');
   },
 
-  setGoodEvil: function(number) {
+  setGoodEvil: function() {
     console.log('Team:' + number);
     number = Math.random();
     if (number >= 0.5) {
