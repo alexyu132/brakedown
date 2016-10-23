@@ -10,17 +10,23 @@ var isInitialized = false;
  * @param socket The socket object for the connected client.
  */
 exports.initGame = function(sio, socket) {
+
   io = sio;
   gameSocket = socket;
   gameSocket.pingTimeout = 3000;
   gameSocket.reconnection = false;
   gameSocket.emit('connected', BOUND, TRACK_LENGTH);
+  //randomly decide if user is good or evil
+
   numPlayers++;
   console.log('numplayers:' + numPlayers);
   io.sockets.emit('giveNumPlayers', numPlayers);
   // Host Events
   //gameSocket.on('IAmReadyToPlay', hostReady);
   gameSocket.on('CoordinateData', updateDataToServer);
+  gameSocket.on('RequestTeam', function() {
+    gameSocket.emit('goodEvil', Math.round(Math.random()));
+  });
   gameSocket.on('disconnect', function() {
     numPlayers--;
     io.sockets.emit('giveNumPlayers', numPlayers);
@@ -34,19 +40,18 @@ exports.initGame = function(sio, socket) {
     console.log('initializing...numplayers:' + numPlayers);
     obstacleArray = [];
     generateObstacleArray(OBSTACLE_SPACING);
-    clearInterval(loopIntervalID);
-    loopIntervalID = setInterval(gameloop, timeInterval);
     isInitialized = true;
     gameState = GAME_IN_PROGRESS;
     xPos = 0;
     yPos = 0;
     velocity = 0;
+    io.sockets.emit('NewGame');
+    clearInterval(loopIntervalID);
+    loopIntervalID = setInterval(gameloop, timeInterval);
+
   }
 }
 
-// function hostReady() {
-//     console.log('A client is ready to play!');
-// };
 
 
 // Game Logic
@@ -103,22 +108,23 @@ function gameloop() {
 
   if (gameState != GAME_IN_PROGRESS || !isInitialized) { //if(gameState != GAME_IN_PROGRESS) {
 
+
     //  clearInterval(loopIntervalID);
-    if (gameState == GAME_OVER_WON) {
-      io.sockets.emit('GameEnded', true);
-    } else if (gameState == GAME_OVER_LOST) {
-      io.sockets.emit('GameEnded', false);
-    }
+
   } else {
     update(timeInterval);
+
   }
   io.sockets.emit('SendDataToClient', xPos, yPos, getRotationValue(),
     obstacleArray, getSelfRotationValue());
 
+
 }
 
 
+
 function updateDataToServer(mouseX, windowWidth) {
+
   console.log('Received X coordinate ' + mouseX + " from client!" + windowWidth);
   //  console.log('Current Velocity:' + velocity);
   playerVelocityInput = (mouseX - windowWidth / 2.0) / windowWidth;
@@ -126,7 +132,8 @@ function updateDataToServer(mouseX, windowWidth) {
   playerVelocityInput *= velocityMultiplier;
   updateVelocity(playerVelocityInput);
   //gameSocket.emit('IHaveReceivedYourCoordinates');
-};
+
+}
 
 function update(deltaTime) {
   updatePosition(deltaTime);
@@ -152,19 +159,27 @@ function updateGameStatus(collisionOccurred) {
     gameState = GAME_OVER_LOST;
   }
 
+
   if (gameState != GAME_IN_PROGRESS) {
     endLoopCounter = 5;
     endCountDownLoopID = setInterval(endLoop, 1000);
   }
+
 }
 
 var endLoopCounter = 5;
 
 function endLoop() {
-  if (endLoopCounter == 5) io.sockets.emit('ReceiveMessage', "You Win", 2000);
 
-  else if (endLoopCounter == 3) io.sockets.emit('ReceiveMessage',
-    "New game in: 3", 1000);
+  if (endLoopCounter == 5) {
+    if (gameState == GAME_OVER_WON) {
+      io.sockets.emit('GameEnded', true);
+    } else if (gameState == GAME_OVER_LOST) {
+      io.sockets.emit('GameEnded', false);
+    }
+  }
+  if (endLoopCounter == 3) io.sockets.emit('ReceiveMessage', "New game in: 3",
+    1000);
   else if (endLoopCounter == 2) io.sockets.emit('ReceiveMessage',
     "New game in: 2", 1000);
   else if (endLoopCounter == 1) io.sockets.emit('ReceiveMessage',
@@ -174,15 +189,19 @@ function endLoop() {
     console.log('initializing...numplayers:' + numPlayers);
     obstacleArray = [];
     generateObstacleArray(OBSTACLE_SPACING);
-    clearInterval(loopIntervalID);
-    loopIntervalID = setInterval(gameloop, timeInterval);
+
     isInitialized = true;
     gameState = GAME_IN_PROGRESS;
     xPos = 0;
     yPos = 0;
     velocity = 0;
+    //randomly decide if user is good or evil
+    io.sockets.emit('NewGame');
+    clearInterval(loopIntervalID);
+    loopIntervalID = setInterval(gameloop, timeInterval);
   }
   endLoopCounter--;
+
 }
 
 function checkCollisions() {

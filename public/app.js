@@ -12,7 +12,12 @@ var selfOldAngle = 0;
 var selfTurnAccel = 0;
 var numPlayers = 0;
 var displayingMessage = false;
+var good = true;
 var displayedMessage = "";
+var messageDisplayTime = 1000;
+var timeoutFunction;
+var messageColor = "#00FF00";
+
 
 var IO = {
 
@@ -40,15 +45,34 @@ var IO = {
     IO.socket.on('SendDataToClient', IO.updateDataToClient);
     IO.socket.on('giveNumPlayers', IO.updateNumPlayers);
     IO.socket.on('ReceiveMessage', IO.showMessage);
+    IO.socket.on('goodEvil', IO.setGoodEvil);
+    IO.socket.on('NewGame', IO.requestTeam);
+  },
+
+  requestTeam: function() {
+    IO.socket.emit('RequestTeam');
+  },
+
+  setGoodEvil: function(number) {
+    console.log(number);
+    if (number >= 0.5) {
+      good = false;
+    } else {
+      good = true;
+    }
   },
 
   showMessage: function(receivedMessage, displayTime) {
     displayingMessage = true;
     displayedMessage = receivedMessage;
-
-    setTimeout(function() {
+    messageDisplayTime = displayTime;
+    clearTimeout(timeoutFunction);
+    timeoutFunction = setTimeout(function() {
       displayingMessage = false;
-    }, displayTime + 2000);
+
+
+    }, displayTime);
+
   },
 
   updateNumPlayers: function(numPlayersReceived) {
@@ -108,7 +132,7 @@ var IO = {
       }
     }
 
-    obstacle.fillStyle = "#FF0000";
+    obstacle.fillStyle = "#444444";
     for (var i = 0; i < obstacleArray.length; i++) {
 
       obstacle.fillRect(obstacleArray[i].leftBound, -obstacleArray[i].yLocation -
@@ -139,6 +163,7 @@ var IO = {
     //CAR
     car.fillStyle = "#ff0000";
     car.translate(xPos, yPos + 20);
+    car.rotate(-selfOldAngle);
     car.rotate(oldAngle);
     car.translate(-xPos, -yPos + 20);
 
@@ -169,17 +194,39 @@ var IO = {
 
     car.fillStyle = "#000000";
     car.font = "25px Verdana";
-    car.fillText(numPlayers + " player(s) online!", window.innerWidth - 250,
+
+    car.fillText(numPlayers + " player(s) online!", window.innerWidth - 252,
       30);
     car.fillStyle = "#66CD00";
-    car.fillText(numPlayers + " player(s) online!", window.innerWidth - 252,
+    car.fillText(numPlayers + " player(s) online!", window.innerWidth - 250,
       28);
 
+    if (good) {
+      car.fillStyle = "#000000";
+      car.fillText("Team Good: Steer to the finish.", 20, 30);
+      car.fillStyle = "#00FF00";
+      car.fillText("Team Good: Steer to the finish.", 18, 28);
+
+
+    } else {
+      car.fillStyle = "#000000";
+      car.fillText("Team Evil: Try to crash the car.", 20, 30);
+      car.fillStyle = "#FF0000";
+      car.fillText("Team Evil: Try to crash the car.", 18, 28);
+    }
+
+
     if (displayingMessage) {
+      car.fillStyle = messageColor;
       car.font = "Arial 66px";
       var messageWidth = car.measureText(displayedMessage).width;
       car.fillText(displayedMessage, (window.innerWidth - messageWidth) / 2,
         100);
+      // clearTimeout(timeoutFunction);
+      // setTimeout(function() {
+      //   displayingMessage = false;
+      // }, messageDisplayTime);
+
     }
     //console.log("Player yPos: " + yPos);
 
@@ -187,9 +234,13 @@ var IO = {
 
 
   gameEnded(playerWon) {
-    if (playerWon) {
+    if (playerWon == good) {
+      messageColor = '#00FF00';
+      IO.showMessage('You Win!', 2000);
       console.log('You win!');
     } else {
+      messageColor = '#FF0000';
+      IO.showMessage('You Lose!', 2000);
       console.log('You lose!');
     }
   }, //TODO: actually end the game, allow user(s) to restart
