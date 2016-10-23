@@ -16,7 +16,6 @@ exports.initGame = function(sio, socket) {
     gameSocket.reconnection = false;
     gameSocket.emit('connected', BOUND, TRACK_LENGTH);
     //randomly decide if user is good or evil
-    gameSocket.emit('goodEvil', Math.round(Math.random()));
 
     numPlayers++;
     console.log('numplayers:' + numPlayers);
@@ -24,6 +23,9 @@ exports.initGame = function(sio, socket) {
     // Host Events
     //gameSocket.on('IAmReadyToPlay', hostReady);
     gameSocket.on('CoordinateData', updateDataToServer);
+    gameSocket.on('RequestTeam', function() {
+        gameSocket.emit('goodEvil', Math.round(Math.random()));
+    });
     gameSocket.on('disconnect', function() {
         numPlayers--;
         io.sockets.emit('giveNumPlayers', numPlayers);
@@ -37,20 +39,16 @@ exports.initGame = function(sio, socket) {
         console.log('initializing...numplayers:' + numPlayers);
         obstacleArray = [];
         generateObstacleArray(OBSTACLE_SPACING);
-        clearInterval(loopIntervalID);
-        loopIntervalID = setInterval(gameloop, timeInterval);
         isInitialized = true;
         gameState = GAME_IN_PROGRESS;
         xPos = 0;
         yPos = 0;
         velocity = 0;
+        io.sockets.emit('NewGame');
+        clearInterval(loopIntervalID);
+        loopIntervalID = setInterval(gameloop, timeInterval);
     }
 }
-
-// function hostReady() {
-//     console.log('A client is ready to play!');
-// };
-
 
 // Game Logic
 
@@ -107,11 +105,7 @@ function gameloop() {
     if (gameState != GAME_IN_PROGRESS || !isInitialized) { //if(gameState != GAME_IN_PROGRESS) {
 
         //  clearInterval(loopIntervalID);
-        if (gameState == GAME_OVER_WON) {
-            io.sockets.emit('GameEnded', true);
-        } else if (gameState == GAME_OVER_LOST) {
-            io.sockets.emit('GameEnded', false);
-        }
+
     } else {
         update(timeInterval);
     }
@@ -121,7 +115,7 @@ function gameloop() {
 
 
 function updateDataToServer(mouseX, windowWidth) {
-      console.log('Received X coordinate ' + mouseX + " from client!" + windowWidth);
+    console.log('Received X coordinate ' + mouseX + " from client!" + windowWidth);
     //  console.log('Current Velocity:' + velocity);
     var playerVelocityInput = (mouseX - windowWidth / 2.0) / windowWidth;
     playerVelocityInput = Math.max(-1, Math.min(playerVelocityInput, 1));
@@ -154,37 +148,42 @@ function updateGameStatus(collisionOccurred) {
         gameState = GAME_OVER_LOST;
     }
 
-    if(gameState != GAME_IN_PROGRESS){
-      endLoopCounter = 5;
-      endCountDownLoopID = setInterval(endLoop, 1000);
+    if (gameState != GAME_IN_PROGRESS) {
+        endLoopCounter = 5;
+        endCountDownLoopID = setInterval(endLoop, 1000);
     }
 }
 
 var endLoopCounter = 5;
 
 function endLoop() {
-  if(endLoopCounter==5)io.sockets.emit('ReceiveMessage',"You Win", 2000);
-  else if(endLoopCounter==3)io.sockets.emit('ReceiveMessage',"New game in: 3", 1000);
-  else if(endLoopCounter==2)io.sockets.emit('ReceiveMessage',"New game in: 2", 1000);
-  else if(endLoopCounter==1)io.sockets.emit('ReceiveMessage',"New game in: 1", 1000);
-  else if(endLoopCounter==0){
-    clearInterval(endCountDownLoopID);
-    console.log('initializing...numplayers:' + numPlayers);
-    obstacleArray = [];
-    generateObstacleArray(OBSTACLE_SPACING);
-    clearInterval(loopIntervalID);
+    if (endLoopCounter == 5) {
+        if (gameState == GAME_OVER_WON) {
+            io.sockets.emit('GameEnded', true);
+        } else if (gameState == GAME_OVER_LOST) {
+            io.sockets.emit('GameEnded', false);
+        }
+    }
+    if (endLoopCounter == 3) io.sockets.emit('ReceiveMessage', "New game in: 3", 1000);
+    else if (endLoopCounter == 2) io.sockets.emit('ReceiveMessage', "New game in: 2", 1000);
+    else if (endLoopCounter == 1) io.sockets.emit('ReceiveMessage', "New game in: 1", 1000);
+    else if (endLoopCounter == 0) {
+        clearInterval(endCountDownLoopID);
+        console.log('initializing...numplayers:' + numPlayers);
+        obstacleArray = [];
+        generateObstacleArray(OBSTACLE_SPACING);
 
-    isInitialized = true;
-    gameState = GAME_IN_PROGRESS;
-    xPos = 0;
-    yPos = 0;
-    velocity = 0;
-    //randomly decide if user is good or evil
-    gameSocket.emit('goodEvil', Math.round(Math.random()));
-
-    loopIntervalID = setInterval(gameloop, timeInterval);
-  }
-  endLoopCounter--;
+        isInitialized = true;
+        gameState = GAME_IN_PROGRESS;
+        xPos = 0;
+        yPos = 0;
+        velocity = 0;
+        //randomly decide if user is good or evil
+        io.sockets.emit('NewGame');
+        clearInterval(loopIntervalID);
+        loopIntervalID = setInterval(gameloop, timeInterval);
+    }
+    endLoopCounter--;
 }
 
 function checkCollisions() {

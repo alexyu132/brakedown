@@ -14,6 +14,7 @@ var good = true;
 var displayedMessage = "";
 var messageDisplayTime = 1000;
 var timeoutFunction;
+var messageColor = "#00FF00";
 
 
 var IO = {
@@ -43,16 +44,22 @@ var IO = {
     IO.socket.on('giveNumPlayers', IO.updateNumPlayers);
     IO.socket.on('ReceiveMessage', IO.showMessage);
     IO.socket.on('goodEvil', IO.setGoodEvil);
+    IO.socket.on('NewGame', IO.requestTeam);
+  },
+
+  requestTeam: function(){
+    IO.socket.emit('RequestTeam');
   },
 
   setGoodEvil: function(number){
-    if(number == 0){
+    console.log(number);
+    if(number >= 0.5){
       good = false;
     }
-    else{
+    else {
       good = true;
     }
-  }
+  },
 
   showMessage: function(receivedMessage, displayTime) {
     displayingMessage = true;
@@ -151,17 +158,27 @@ var IO = {
 
     car.fillStyle = "#000000";
     car.font = "25px Verdana";
-    car.fillText(numPlayers + " player(s) online!", window.innerWidth - 250, 30);
+    car.fillText(numPlayers + " player(s) online!", window.innerWidth - 252, 30);
     car.fillStyle = "#66CD00";
-    car.fillText(numPlayers + " player(s) online!", window.innerWidth - 252, 28);
+    car.fillText(numPlayers + " player(s) online!", window.innerWidth - 250, 28);
 
     if(good) {
-      
-    } else {
+      car.fillStyle = "#000000";
+      car.fillText("Team Good: Steer to the finish.", 20, 30);
+      car.fillStyle = "#00FF00";
+      car.fillText("Team Good: Steer to the finish.", 22, 28);
 
+
+    } else {
+      car.fillStyle = "#000000";
+      car.fillText("Team Evil: Try to crash the car.", 20, 30);
+      car.fillStyle = "#FF0000";
+      car.fillText("Team Evil: Try to crash the car.", 22, 28);
     }
 
+
     if(displayingMessage) {
+      car.fillStyle = messageColor;
       car.font = "Arial 66px";
       var messageWidth = car.measureText(displayedMessage).width;
       car.fillText(displayedMessage, (window.innerWidth - messageWidth) / 2, 100);
@@ -176,9 +193,13 @@ var IO = {
 
 
   gameEnded(playerWon) {
-    if (playerWon) {
+    if (playerWon == good) {
+      messageColor = '#00FF00';
+      IO.showMessage('You Win!',2000);
       console.log('You win!');
     } else {
+      messageColor = '#FF0000';
+      IO.showMessage('You Lose!',2000);
       console.log('You lose!');
     }
   }, //TODO: actually end the game, allow user(s) to restart
