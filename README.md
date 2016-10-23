@@ -1,6 +1,5 @@
 # brakedown
-Hophacks game 2016
-brakedown.herokuapp.com
+Hophacks game 2016: brakedown.herokuapp.com
 
 Live multiplayer .io style game incorporating crowd decision concepts.
 
