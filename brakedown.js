@@ -15,6 +15,9 @@ exports.initGame = function(sio, socket) {
     gameSocket.pingTimeout = 3000;
     gameSocket.reconnection = false;
     gameSocket.emit('connected', BOUND, TRACK_LENGTH);
+    //randomly decide if user is good or evil
+    gameSocket.emit('goodEvil', Math.round(Math.random()));
+
     numPlayers++;
     console.log('numplayers:' + numPlayers);
     io.sockets.emit('giveNumPlayers', numPlayers);
@@ -170,12 +173,16 @@ function endLoop() {
     obstacleArray = [];
     generateObstacleArray(OBSTACLE_SPACING);
     clearInterval(loopIntervalID);
-    loopIntervalID = setInterval(gameloop, timeInterval);
+
     isInitialized = true;
     gameState = GAME_IN_PROGRESS;
     xPos = 0;
     yPos = 0;
     velocity = 0;
+    //randomly decide if user is good or evil
+    gameSocket.emit('goodEvil', Math.round(Math.random()));
+
+    loopIntervalID = setInterval(gameloop, timeInterval);
   }
   endLoopCounter--;
 }

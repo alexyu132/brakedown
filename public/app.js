@@ -10,6 +10,7 @@ var oldAngle = 0;
 var turnAccel = 0;
 var numPlayers = 0;
 var displayingMessage = false;
+var good = true;
 var displayedMessage = "";
 var messageDisplayTime = 1000;
 var timeoutFunction;
@@ -41,7 +42,17 @@ var IO = {
     IO.socket.on('SendDataToClient', IO.updateDataToClient);
     IO.socket.on('giveNumPlayers', IO.updateNumPlayers);
     IO.socket.on('ReceiveMessage', IO.showMessage);
+    IO.socket.on('goodEvil', IO.setGoodEvil);
   },
+
+  setGoodEvil: function(number){
+    if(number == 0){
+      good = false;
+    }
+    else{
+      good = true;
+    }
+  }
 
   showMessage: function(receivedMessage, displayTime) {
     displayingMessage = true;
