@@ -8,6 +8,8 @@
  */
 var oldAngle = 0;
 var turnAccel = 0;
+var selfOldAngle = 0;
+var selfTurnAccel = 0;
 var numPlayers = 0;
 var displayingMessage = false;
 var displayedMessage = "";
@@ -46,14 +48,14 @@ var IO = {
 
     setTimeout(function() {
       displayingMessage = false;
-    }, displayTime+2000);
+    }, displayTime + 2000);
   },
 
   updateNumPlayers: function(numPlayersReceived) {
     numPlayers = numPlayersReceived;
   },
 
-  updateDataToClient: function(xPos, yPos, angle, obstacleArray) {
+  updateDataToClient: function(xPos, yPos, angle, obstacleArray, selfAngle) {
     //console.log('PositionX: ' + xPos);
     //console.log('PositionY: ' + yPos);
     //console.log('Velocity: ' + velocity);
@@ -73,6 +75,7 @@ var IO = {
     var checker = car;
     var line = car;
     var obstacle = car;
+
     //road.save();
 
     road.translate(-xPos + canvas.width / 2, -yPos + canvas.height * .75);
@@ -112,18 +115,35 @@ var IO = {
         80, obstacleArray[i].rightBound - obstacleArray[i].leftBound, 80);
     }
 
+    selfTurnAccel = (selfAngle - selfOldAngle) * 0.2;
+    selfOldAngle += selfTurnAccel;
+    var arrow = car;
+
+    arrow.translate(xPos, yPos + 20);
+    arrow.rotate(selfOldAngle);
+    arrow.translate(-xPos, -yPos + 20);
+
+    arrow.beginPath();
+    arrow.moveTo(xPos, yPos - 40);
+    arrow.lineTo(xPos, yPos - 100);
+    arrow.lineTo(xPos - 20, yPos - 100 + 20);
+    arrow.lineTo(xPos, yPos - 100);
+    arrow.lineTo(xPos + 20, yPos - 100 + 20);
+    arrow.lineTo(xPos, yPos - 100);
+    arrow.strokeStyle = "#ffee00";
+    arrow.stroke();
+    //arrow.closePath();
 
     turnAccel = (angle - oldAngle) * 0.2;
-
     oldAngle += turnAccel;
+    //CAR
     car.fillStyle = "#ff0000";
     car.translate(xPos, yPos + 20);
     car.rotate(oldAngle);
     car.translate(-xPos, -yPos + 20);
 
-    car.beginPath();
-    car.moveTo(xPos, yPos);
 
+    car.moveTo(xPos, yPos);
     car.lineTo(xPos + 40, yPos + 40);
     car.lineTo(xPos, yPos - 40);
     car.lineTo(xPos - 40, yPos + 40);
@@ -133,17 +153,33 @@ var IO = {
     car.stroke();
 
     car.restore();
+    //var arrow = canvas.getContext("2d");
+    //arrow.translate(xPos, yPos + 20);
+    //arrow.rotate(oldAngle);
+    //arrow.translate(-xPos, -yPos + 20);
+    //arrow.beginPath();
+    //arrow.moveTo(xPos, yPos);
+    //arrow.lineTo(xPos + 50, yPos + 50);
+    //arrow.fill();
+    //arrow.lineWidth = 10;
+    //arrow.strokeStyle = "#ff5599";
+    //arrow.stroke();
+    //arrow.closePath();
+    //arrow.restore();
 
     car.fillStyle = "#000000";
     car.font = "25px Verdana";
-    car.fillText(numPlayers + " player(s) online!", window.innerWidth - 250, 30);
+    car.fillText(numPlayers + " player(s) online!", window.innerWidth - 250,
+      30);
     car.fillStyle = "#66CD00";
-    car.fillText(numPlayers + " player(s) online!", window.innerWidth - 252, 28);
+    car.fillText(numPlayers + " player(s) online!", window.innerWidth - 252,
+      28);
 
-    if(displayingMessage) {
+    if (displayingMessage) {
       car.font = "Arial 66px";
       var messageWidth = car.measureText(displayedMessage).width;
-      car.fillText(displayedMessage, (window.innerWidth - messageWidth) / 2, 100);
+      car.fillText(displayedMessage, (window.innerWidth - messageWidth) / 2,
+        100);
     }
     //console.log("Player yPos: " + yPos);
 
