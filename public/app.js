@@ -141,6 +141,12 @@ var IO = {
     car.fillStyle = "#66CD00";
     car.fillText(numPlayers + " player(s) online!", window.innerWidth - 252, 28);
 
+    if(good) {
+      
+    } else {
+
+    }
+
     if(displayingMessage) {
       car.fillStyle = "#66CD00";
       car.font = "Verdana 48px";
