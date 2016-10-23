@@ -44,7 +44,7 @@ var IO = {
     IO.socket.on('giveNumPlayers', IO.updateNumPlayers);
     IO.socket.on('ReceiveMessage', IO.showMessage);
     IO.socket.on('goodEvil', IO.setGoodEvil);
-    IO.socket.on('NewGame', IO.requestTeam);
+    IO.socket.on('NewGame', IO.setGoodEvil);
   },
 
   requestTeam: function() {
