@@ -1,5 +1,4 @@
 var io;
-var gameSocket;
 var loopIntervalID = -1;
 var endCountDownLoopID = -1;
 var isInitialized = false;
@@ -25,8 +24,8 @@ exports.initGame = function(sio, socket) {
   //gameSocket.on('IAmReadyToPlay', hostReady);
   gameSocket.on('CoordinateData', updateDataToServer);
   gameSocket.on('RequestTeam', function() {
-    console.log('team requested');
     gameSocket.emit('goodEvil', Math.random());
+    console.log('team requested');
   });
   gameSocket.on('disconnect', function() {
     numPlayers--;

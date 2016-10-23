@@ -53,6 +53,7 @@ var IO = {
 
   setGoodEvil: function(number) {
     console.log('Team:' + number);
+    number = Math.random();
     if (number >= 0.5) {
       good = false;
     } else {
