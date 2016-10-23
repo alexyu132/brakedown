@@ -10,7 +10,11 @@ var oldAngle = 0;
 var turnAccel = 0;
 var numPlayers = 0;
 var displayingMessage = false;
+var good = true;
 var displayedMessage = "";
+var messageDisplayTime = 1000;
+var timeoutFunction;
+
 
 var IO = {
 
@@ -38,15 +42,25 @@ var IO = {
     IO.socket.on('SendDataToClient', IO.updateDataToClient);
     IO.socket.on('giveNumPlayers', IO.updateNumPlayers);
     IO.socket.on('ReceiveMessage', IO.showMessage);
+    IO.socket.on('goodEvil', IO.setGoodEvil);
   },
+
+  setGoodEvil: function(number){
+    if(number == 0){
+      good = false;
+    }
+    else{
+      good = true;
+    }
+  }
 
   showMessage: function(receivedMessage, displayTime) {
     displayingMessage = true;
     displayedMessage = receivedMessage;
-
-    setTimeout(function() {
+    messageDisplayTime = displayTime;
+    clearTimeout(timeoutFunction);
+    timeoutFunction = setTimeout(function() {
       displayingMessage = false;
-      displayedMessage = "";
     }, displayTime);
   },
 
@@ -148,10 +162,13 @@ var IO = {
     }
 
     if(displayingMessage) {
-      car.fillStyle = "#66CD00";
-      car.font = "Verdana 48px";
-      var messageWidth = ctx.measureText(receivedMessage).width;
-      car.fillText(receivedMessage, (window.innerWidth - messageWidth) / 2, 100);
+      car.font = "Arial 66px";
+      var messageWidth = car.measureText(displayedMessage).width;
+      car.fillText(displayedMessage, (window.innerWidth - messageWidth) / 2, 100);
+      // clearTimeout(timeoutFunction);
+      // setTimeout(function() {
+      //   displayingMessage = false;
+      // }, messageDisplayTime);
     }
     //console.log("Player yPos: " + yPos);
 
