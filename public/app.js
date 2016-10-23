@@ -15,6 +15,7 @@ var displayedMessage = "";
 var messageDisplayTime = 1000;
 var timeoutFunction;
 var messageColor = "#00FF00";
+var mouseX = 0;
 
 
 var IO = {
@@ -135,6 +136,7 @@ var IO = {
       }
     }
 
+
     obstacle.fillStyle = "#888888";
     for (var i = 0; i < obstacleArray.length; i++) {
 
@@ -162,19 +164,6 @@ var IO = {
     car.stroke();
 
     car.restore();
-    //var arrow = canvas.getContext("2d");
-    //arrow.translate(xPos, yPos + 20);
-    //arrow.rotate(oldAngle);
-    //arrow.translate(-xPos, -yPos + 20);
-    //arrow.beginPath();
-    //arrow.moveTo(xPos, yPos);
-    //arrow.lineTo(xPos + 50, yPos + 50);
-    //arrow.fill();
-    //arrow.lineWidth = 10;
-    //arrow.strokeStyle = "#ff5599";
-    //arrow.stroke();
-    //arrow.closePath();
-    //arrow.restore();
 
     car.fillStyle = "#000000";
     car.font = "25px Verdana";
@@ -199,6 +188,8 @@ var IO = {
       car.fillText("Team Evil: Try to crash the car.", 18, 28);
     }
 
+    car.fillStyle = "white";
+    car.fillRect(Math.min(mouseX,window.innerWidth/2),window.innerHeight - 12, Math.abs(mouseX - window.innerWidth/2),12);
 
     if (displayingMessage) {
       car.font = "96px Arial";
@@ -234,6 +225,7 @@ var IO = {
   }, //TODO: actually end the game, allow user(s) to restart
 
 
+
   /**
    * The client is successfully connected!
    */
@@ -243,7 +235,6 @@ var IO = {
     IO.trackLength = trackLength;
     //console.log('bounds:' + bounds + " track length:" + trackLength);
     //IO.socket.emit('IAmReadyToPlay');
-    var mouseX = 0;
     document.onmousemove = handleMouseMove;
 
     function handleMouseMove(event) {
