@@ -8,6 +8,8 @@
  */
 var oldAngle = 0;
 var turnAccel = 0;
+var selfOldAngle = 0;
+var selfTurnAccel = 0;
 var numPlayers = 0;
 var displayingMessage = false;
 var good = true;
@@ -47,16 +49,15 @@ var IO = {
     IO.socket.on('NewGame', IO.requestTeam);
   },
 
-  requestTeam: function(){
+  requestTeam: function() {
     IO.socket.emit('RequestTeam');
   },
 
-  setGoodEvil: function(number){
+  setGoodEvil: function(number) {
     console.log(number);
-    if(number >= 0.5){
+    if (number >= 0.5) {
       good = false;
-    }
-    else {
+    } else {
       good = true;
     }
   },
@@ -68,14 +69,17 @@ var IO = {
     clearTimeout(timeoutFunction);
     timeoutFunction = setTimeout(function() {
       displayingMessage = false;
+
+
     }, displayTime);
+
   },
 
   updateNumPlayers: function(numPlayersReceived) {
     numPlayers = numPlayersReceived;
   },
 
-  updateDataToClient: function(xPos, yPos, angle, obstacleArray) {
+  updateDataToClient: function(xPos, yPos, angle, obstacleArray, selfAngle) {
     //console.log('PositionX: ' + xPos);
     //console.log('PositionY: ' + yPos);
     //console.log('Velocity: ' + velocity);
@@ -97,6 +101,7 @@ var IO = {
     var checker = car;
     var line = car;
     var obstacle = car;
+
     //road.save();
 
     road.translate(-xPos + canvas.width / 2,0);
@@ -137,18 +142,36 @@ var IO = {
         80, obstacleArray[i].rightBound - obstacleArray[i].leftBound, 80);
     }
 
+    selfTurnAccel = (selfAngle - selfOldAngle) * 0.2;
+    selfOldAngle += selfTurnAccel;
+    var arrow = car;
+
+    arrow.translate(xPos, yPos + 20);
+    arrow.rotate(selfOldAngle);
+    arrow.translate(-xPos, -yPos + 20);
+
+    arrow.beginPath();
+    arrow.moveTo(xPos, yPos - 40);
+    arrow.lineTo(xPos, yPos - 100);
+    arrow.lineTo(xPos - 20, yPos - 100 + 20);
+    arrow.lineTo(xPos, yPos - 100);
+    arrow.lineTo(xPos + 20, yPos - 100 + 20);
+    arrow.lineTo(xPos, yPos - 100);
+    arrow.strokeStyle = "#ffee00";
+    arrow.stroke();
+    //arrow.closePath();
 
     turnAccel = (angle - oldAngle) * 0.2;
-
     oldAngle += turnAccel;
+    //CAR
     car.fillStyle = "#ff0000";
     car.translate(xPos, yPos + 20);
+    car.rotate(-selfOldAngle);
     car.rotate(oldAngle);
     car.translate(-xPos, -yPos + 20);
 
-    car.beginPath();
-    car.moveTo(xPos, yPos);
 
+    car.moveTo(xPos, yPos);
     car.lineTo(xPos + 40, yPos + 40);
     car.lineTo(xPos, yPos - 40);
     car.lineTo(xPos - 40, yPos + 40);
@@ -158,14 +181,30 @@ var IO = {
     car.stroke();
 
     car.restore();
+    //var arrow = canvas.getContext("2d");
+    //arrow.translate(xPos, yPos + 20);
+    //arrow.rotate(oldAngle);
+    //arrow.translate(-xPos, -yPos + 20);
+    //arrow.beginPath();
+    //arrow.moveTo(xPos, yPos);
+    //arrow.lineTo(xPos + 50, yPos + 50);
+    //arrow.fill();
+    //arrow.lineWidth = 10;
+    //arrow.strokeStyle = "#ff5599";
+    //arrow.stroke();
+    //arrow.closePath();
+    //arrow.restore();
 
     car.fillStyle = "#000000";
     car.font = "25px Verdana";
-    car.fillText(numPlayers + " player(s) online!", window.innerWidth - 252, 30);
-    car.fillStyle = "#66CD00";
-    car.fillText(numPlayers + " player(s) online!", window.innerWidth - 250, 28);
 
-    if(good) {
+    car.fillText(numPlayers + " player(s) online!", window.innerWidth - 252,
+      30);
+    car.fillStyle = "#66CD00";
+    car.fillText(numPlayers + " player(s) online!", window.innerWidth - 250,
+      28);
+
+    if (good) {
       car.fillStyle = "#000000";
       car.fillText("Team Good: Steer to the finish.", 20, 30);
       car.fillStyle = "#00FF00";
@@ -180,15 +219,17 @@ var IO = {
     }
 
 
-    if(displayingMessage) {
+    if (displayingMessage) {
       car.fillStyle = messageColor;
       car.font = "Arial 66px";
       var messageWidth = car.measureText(displayedMessage).width;
-      car.fillText(displayedMessage, (window.innerWidth - messageWidth) / 2, 100);
+      car.fillText(displayedMessage, (window.innerWidth - messageWidth) / 2,
+        100);
       // clearTimeout(timeoutFunction);
       // setTimeout(function() {
       //   displayingMessage = false;
       // }, messageDisplayTime);
+
     }
     //console.log("Player yPos: " + yPos);
 
@@ -198,11 +239,11 @@ var IO = {
   gameEnded(playerWon) {
     if (playerWon == good) {
       messageColor = '#00FF00';
-      IO.showMessage('You Win!',2000);
+      IO.showMessage('You Win!', 2000);
       console.log('You win!');
     } else {
       messageColor = '#FF0000';
-      IO.showMessage('You Lose!',2000);
+      IO.showMessage('You Lose!', 2000);
       console.log('You lose!');
     }
   }, //TODO: actually end the game, allow user(s) to restart
