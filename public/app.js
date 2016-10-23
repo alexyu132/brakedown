@@ -88,8 +88,10 @@ var IO = {
 
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
+
     //draw car
     var car = canvas.getContext("2d");
+    car.lineWidth = 7;
     car.save();
     var road = car;
     var checker = car;
@@ -97,11 +99,12 @@ var IO = {
     var obstacle = car;
     //road.save();
 
-    road.translate(-xPos + canvas.width / 2, -yPos + canvas.height * .75);
+    road.translate(-xPos + canvas.width / 2,0);
 
     road.fillStyle = "#222222";
-    road.fillRect(-IO.bounds, -IO.trackLength, IO.bounds * 2, IO.trackLength *
-      2);
+    road.fillRect(-IO.bounds, 0, IO.bounds * 2, window.innerHeight);
+
+    road.translate(0, -yPos + canvas.height * .75);
 
     for (var i = 0; i < IO.trackLength / 80; i++) {
       line.fillStyle = "#FFFFFF";
