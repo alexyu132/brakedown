@@ -25,7 +25,8 @@ exports.initGame = function(sio, socket) {
   //gameSocket.on('IAmReadyToPlay', hostReady);
   gameSocket.on('CoordinateData', updateDataToServer);
   gameSocket.on('RequestTeam', function() {
-    gameSocket.emit('goodEvil', Math.round(Math.random()));
+    console.log('team requested');
+    gameSocket.emit('goodEvil', Math.random());
   });
   gameSocket.on('disconnect', function() {
     numPlayers--;
@@ -116,7 +117,7 @@ function gameloop() {
 
   }
   io.sockets.emit('SendDataToClient', xPos, yPos, getRotationValue(),
-    obstacleArray, getSelfRotationValue());
+    obstacleArray);
 
 
 }
@@ -125,7 +126,7 @@ function gameloop() {
 
 function updateDataToServer(mouseX, windowWidth) {
 
-  console.log('Received X coordinate ' + mouseX + " from client!" + windowWidth);
+//  console.log('Received X coordinate ' + mouseX + " from client!" + windowWidth);
   //  console.log('Current Velocity:' + velocity);
   playerVelocityInput = (mouseX - windowWidth / 2.0) / windowWidth;
   playerVelocityInput = Math.max(-1, Math.min(playerVelocityInput, 1));
@@ -225,16 +226,10 @@ function getRotationValue() {
   return Math.atan(velocity / forwardSpeed);
 }
 
-function getSelfRotationValue() {
-  if (playerVelocityInput == 0) {
-    return 0;
-  }
-  return Math.atan(playerVelocityInput / forwardSpeed);
-}
-
 function generateObstacleArray(spacing) {
   for (i = spacing; i < TRACK_LENGTH; i += spacing) {
-    obstacleArray.push(new Obstacle(2 * (Math.random() - 0.5) * BOUND, 150 +
-      Math.random() * BOUND, i));
+    var newSize = 150 +
+      Math.random() * BOUND;
+    obstacleArray.push(new Obstacle(2 * (Math.random() - 0.5) * BOUND - newSize/2, newSize, i));
   }
 }

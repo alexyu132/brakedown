@@ -8,8 +8,6 @@
  */
 var oldAngle = 0;
 var turnAccel = 0;
-var selfOldAngle = 0;
-var selfTurnAccel = 0;
 var numPlayers = 0;
 var displayingMessage = false;
 var good = true;
@@ -54,7 +52,7 @@ var IO = {
   },
 
   setGoodEvil: function(number) {
-    console.log(number);
+    console.log('Team:' + number);
     if (number >= 0.5) {
       good = false;
     } else {
@@ -79,7 +77,7 @@ var IO = {
     numPlayers = numPlayersReceived;
   },
 
-  updateDataToClient: function(xPos, yPos, angle, obstacleArray, selfAngle) {
+  updateDataToClient: function(xPos, yPos, angle, obstacleArray) {
     //console.log('PositionX: ' + xPos);
     //console.log('PositionY: ' + yPos);
     //console.log('Velocity: ' + velocity);
@@ -95,7 +93,7 @@ var IO = {
 
     //draw car
     var car = canvas.getContext("2d");
-    car.lineWidth = 7;
+    car.lineWidth = 4;
     car.save();
     var road = car;
     var checker = car;
@@ -135,38 +133,19 @@ var IO = {
       }
     }
 
-    obstacle.fillStyle = "#444444";
+    obstacle.fillStyle = "#888888";
     for (var i = 0; i < obstacleArray.length; i++) {
 
       obstacle.fillRect(obstacleArray[i].leftBound, -obstacleArray[i].yLocation -
         80, obstacleArray[i].rightBound - obstacleArray[i].leftBound, 80);
     }
 
-    selfTurnAccel = (selfAngle - selfOldAngle) * 0.2;
-    selfOldAngle += selfTurnAccel;
-    var arrow = car;
-
-    arrow.translate(xPos, yPos + 20);
-    arrow.rotate(selfOldAngle);
-    arrow.translate(-xPos, -yPos + 20);
-
-    arrow.beginPath();
-    arrow.moveTo(xPos, yPos - 40);
-    arrow.lineTo(xPos, yPos - 100);
-    arrow.lineTo(xPos - 20, yPos - 100 + 20);
-    arrow.lineTo(xPos, yPos - 100);
-    arrow.lineTo(xPos + 20, yPos - 100 + 20);
-    arrow.lineTo(xPos, yPos - 100);
-    arrow.strokeStyle = "#ffee00";
-    arrow.stroke();
-    //arrow.closePath();
-
     turnAccel = (angle - oldAngle) * 0.2;
     oldAngle += turnAccel;
     //CAR
     car.fillStyle = "#ff0000";
     car.translate(xPos, yPos + 20);
-    car.rotate(-selfOldAngle);
+    //car.rotate(-selfOldAngle);
     car.rotate(oldAngle);
     car.translate(-xPos, -yPos + 20);
 
@@ -221,10 +200,10 @@ var IO = {
 
     if (displayingMessage) {
       car.fillStyle = messageColor;
-      car.font = "Arial 66px";
+      car.font = "96px Arial";
       var messageWidth = car.measureText(displayedMessage).width;
       car.fillText(displayedMessage, (window.innerWidth - messageWidth) / 2,
-        100);
+        200);
       // clearTimeout(timeoutFunction);
       // setTimeout(function() {
       //   displayingMessage = false;
@@ -256,7 +235,7 @@ var IO = {
     // Cache a copy of the client's socket.IO session ID on the App
     IO.bounds = bounds;
     IO.trackLength = trackLength;
-    console.log('bounds:' + bounds + " track length:" + trackLength);
+    //console.log('bounds:' + bounds + " track length:" + trackLength);
     //IO.socket.emit('IAmReadyToPlay');
     var mouseX = 0;
     document.onmousemove = handleMouseMove;
