@@ -227,7 +227,7 @@ function getRotationValue() {
 
 function generateObstacleArray(spacing) {
   for (i = spacing; i < TRACK_LENGTH; i += spacing) {
-    var newSize = 150 +
+    var newSize = 100 +
       Math.random() * BOUND;
     obstacleArray.push(new Obstacle(2 * (Math.random() - 0.5) * BOUND - newSize/2, newSize, i));
   }

@@ -201,9 +201,13 @@ var IO = {
 
 
     if (displayingMessage) {
-      car.fillStyle = messageColor;
       car.font = "96px Arial";
+      car.fillStyle = "#000000";
+
       var messageWidth = car.measureText(displayedMessage).width;
+      car.fillText(displayedMessage, (window.innerWidth - messageWidth) / 2,
+        203);
+      car.fillStyle = messageColor;
       car.fillText(displayedMessage, (window.innerWidth - messageWidth) / 2,
         200);
       // clearTimeout(timeoutFunction);
