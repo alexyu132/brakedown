@@ -137,7 +137,7 @@ var IO = {
     }
 
 
-    obstacle.fillStyle = "#888888";
+    obstacle.fillStyle = "#777777";
     for (var i = 0; i < obstacleArray.length; i++) {
 
       obstacle.fillRect(obstacleArray[i].leftBound, -obstacleArray[i].yLocation -
