@@ -127,7 +127,7 @@ var IO = {
       }
     }
 
-    obstacle.fillStyle = "#FF0000";
+    obstacle.fillStyle = "#444444";
     for (var i = 0; i < obstacleArray.length; i++) {
 
       obstacle.fillRect(obstacleArray[i].leftBound, -obstacleArray[i].yLocation -
@@ -166,14 +166,14 @@ var IO = {
       car.fillStyle = "#000000";
       car.fillText("Team Good: Steer to the finish.", 20, 30);
       car.fillStyle = "#00FF00";
-      car.fillText("Team Good: Steer to the finish.", 22, 28);
+      car.fillText("Team Good: Steer to the finish.", 18, 28);
 
 
     } else {
       car.fillStyle = "#000000";
       car.fillText("Team Evil: Try to crash the car.", 20, 30);
       car.fillStyle = "#FF0000";
-      car.fillText("Team Evil: Try to crash the car.", 22, 28);
+      car.fillText("Team Evil: Try to crash the car.", 18, 28);
     }
 
 
