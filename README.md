@@ -1,5 +1,5 @@
 # brakedown
-Hophacks game 2016: brakedown.herokuapp.com
+Coded in 36 sleep-deprived hours at HopHacks Fall 2016: brakedown.herokuapp.com
 
 Live multiplayer .io style game incorporating crowd decision concepts.
 
